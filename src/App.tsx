@@ -1,14 +1,20 @@
 import './App.css'
+import { ProductList } from './ProductList';
+import { useOliunid } from './useOliunid';
 import { useVirsotne } from './useVirsotne'
 
 function App() {
-  const [data, error] = useVirsotne({ brand: "", size: 0 });
-  console.log(data);
+  const [productsVirsotne, errorVirsotne] = useVirsotne({ brand: "", size: 0 });
+  const [productsOliunid, errorOliunid] = useOliunid({ brand: "", size: 0 });
 
-  return (
-    <div className="App">
-    </div>
-  )
+  if (productsVirsotne && productsOliunid) {
+    return (
+      <div className="App">
+        <ProductList products={[...productsVirsotne, ...productsOliunid]} />
+      </div>
+    )
+  }
+
 }
 
 export default App
