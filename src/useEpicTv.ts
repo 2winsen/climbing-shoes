@@ -3,7 +3,7 @@ import { Product, SearchParams } from "./types";
 import { capitalize, fetchMock, knownManufacturers } from "./utils";
 
 
-const FETCH_URL = "https://www.oliunid.com/eu/footwear/climbing-shoes.html?amshopby%5Btaglia_scapette%5D%5B%5D=44&shopbyAjax=1";
+const FETCH_URL = "https://epictv.com/footwear/climbing-shoes?amshopby%5Bshoe_size%5D%5B%5D=7405&shopbyAjax=1";
 
 function split(manufacturerAndProductName: string) {
   const manufacturer = knownManufacturers().find(available =>
@@ -15,7 +15,7 @@ function split(manufacturerAndProductName: string) {
   ];
 }
 
-export function useOliunid(searchParams: SearchParams) {
+export function useEpicTv(searchParams: SearchParams) {
   const [data, setData] = useState<Product[]>();
   const [error, setError] = useState();
 
@@ -29,14 +29,14 @@ export function useOliunid(searchParams: SearchParams) {
         const productsToBeParsed = el.querySelectorAll(".products.list .product-item");
         const products: Product[] = [];
         for (const product of productsToBeParsed) {
-          const manufacturerAndProductName = product.querySelector(".product-item-name")?.textContent;
-          const sellerUrl = product.querySelector(".product-item-name .product-item-link")?.getAttribute("href");
+          const manufacturerAndProductName = product.querySelector(".product-item-link")?.textContent;
+          const sellerUrl = product.querySelector(".product-item-link")?.getAttribute("href");
           const price = product.querySelector(".price")?.textContent;
-          const imageUrl = (product.querySelector(".product-item-info source") as HTMLElement)?.dataset.srcset;
+          const imageUrl = (product.querySelector(".product-image-photo") as HTMLElement)?.getAttribute("src");
           if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
             const [manufacturer, productName] = split(
               manufacturerAndProductName
-                .replace("climbing shoes", "")
+                .replace("Climbing Shoe", "")
                 .trim()
             );
             products.push({
