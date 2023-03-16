@@ -1,32 +1,18 @@
-import { flatten } from 'lodash-es';
-import './App.css'
-import { Loading } from './Loading/Loading';
-import { ProductList } from './ProductList';
-import { Product } from './types';
-import { useEpicTv } from './useEpicTv';
-import { useOliunid } from './useOliunid';
-import { useVirsotne } from './useVirsotne'
-import { useTimeout } from './utils';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import styles from './App.module.scss';
+import Landing from './pages/Landing';
+import Search from './pages/Search';
 
 function App() {
-  const queryV = useVirsotne({ brand: "", size: 0 });
-  const queryO = useOliunid({ brand: "", size: 0 });
-  const queryE = useEpicTv({ brand: "", size: 0 });
-  const all = [queryV, queryO, queryE];
-  const ready = all.every(([data, error]) => data || error);
-  const readyTimeout = useTimeout(ready, 500);
-  
-  if (!readyTimeout) {
-    return <Loading items={all} />
-  }
-  const products = flatten(
-    all
-      .filter(([data]) => data)
-      .map(([data]) => data as Product[])
-  )
   return (
-    <div className="App">
-      <ProductList products={products} />
+    <div className={styles.app}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="*" element={<Landing />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   )
 }

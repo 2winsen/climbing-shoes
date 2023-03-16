@@ -1,7 +1,7 @@
 import {
   ICellRendererParams
 } from 'ag-grid-community';
-import { Product } from './types';
+import { Product } from '../types';
 
 export function ProductImageCellRenderer(props: ICellRendererParams<Product>) {
   return (

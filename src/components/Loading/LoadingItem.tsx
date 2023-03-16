@@ -1,4 +1,4 @@
-import { Product } from "../types";
+import { Product } from "../../types";
 import { Indicator } from "./Indicator";
 import styles from './LoadingItem.module.scss';
 

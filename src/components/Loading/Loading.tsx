@@ -1,6 +1,6 @@
 import { LoadingItem } from './LoadingItem';
 import styles from './Loading.module.scss';
-import { QueryResult } from '../types';
+import { QueryResult } from '../../types';
 
 interface Props {
   items: QueryResult[];
