@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Product, SearchParams } from "./types";
+import { Product, QueryResult, SearchParams } from "./types";
 import { capitalize, fetchMock } from "./utils";
 
 const FETCH_URL = "https://virsotne.lv/modules/blocklayered/blocklayered-ajax.php?layered_id_attribute_group_4344=4344_9&id_category_layered=72&layered_weight_slider=0_510&layered_price_slider=39_155&orderby=date_add&orderway=desc&asd=&_=1676913420204";
 
-export function useVirsotne(searchParams: SearchParams) {
+export function useVirsotne(searchParams: SearchParams): QueryResult {
   const [data, setData] = useState<Product[]>();
   const [error, setError] = useState();
 
@@ -42,5 +42,5 @@ export function useVirsotne(searchParams: SearchParams) {
   }, [searchParams.brand, searchParams.size])
 
 
-  return [data, error];
+  return [data, error, "virsotne.lv"];
 }

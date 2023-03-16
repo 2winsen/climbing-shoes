@@ -8,6 +8,8 @@ export interface Product {
   productName: string;
   price: number;
   imageUrl: string;
-  sellerUrl : string;
-  seller : string;
+  sellerUrl: string;
+  seller: string;
 }
+
+export type QueryResult = [Product[] | undefined, any, string];

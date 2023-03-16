@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Product, SearchParams } from "./types";
+import { Product, QueryResult, SearchParams } from "./types";
 import { capitalize, fetchMock, knownManufacturers } from "./utils";
 
 
@@ -15,7 +15,7 @@ function split(manufacturerAndProductName: string) {
   ];
 }
 
-export function useEpicTv(searchParams: SearchParams) {
+export function useEpicTv(searchParams: SearchParams): QueryResult {
   const [data, setData] = useState<Product[]>();
   const [error, setError] = useState();
 
@@ -57,5 +57,5 @@ export function useEpicTv(searchParams: SearchParams) {
   }, [searchParams.brand, searchParams.size])
 
 
-  return [data, error];
+  return [data, error, "epictv.com"];
 }

@@ -12,7 +12,7 @@ import { SellerUrlCellRenderer } from './SellerUrlCellRenderer';
 import { Product } from './types';
 
 interface Props {
-  products: Product[] | undefined;
+  products: Product[];
 }
 
 export function ProductList({ products }: Props) {
