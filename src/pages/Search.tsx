@@ -7,11 +7,19 @@ import { useVirsotne } from '../useVirsotne'
 import { useTimeout } from '../utils';
 import { ProductList } from '../components/ProductList';
 import styles from './Search.module.scss';
+import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 function Search() {
-  const queryV = useVirsotne({ brand: "", size: 0 });
-  const queryO = useOliunid({ brand: "", size: 0 });
-  const queryE = useEpicTv({ brand: "", size: 0 });
+  let [searchParams] = useSearchParams();
+  const [size] = useState<number>(() => {
+    const sizeInt = parseInt(searchParams.get('size') ?? "", 10);
+    return isNaN(sizeInt) ? 0 : sizeInt;
+  });
+
+  const queryV = useVirsotne({ size });
+  const queryO = useOliunid({ size });
+  const queryE = useEpicTv({ size });
   const all = [queryV, queryO, queryE];
   const ready = all.every(([data, error]) => data || error);
   const readyTimeout = useTimeout(ready, 500);

@@ -39,7 +39,7 @@ export function useVirsotne(searchParams: SearchParams): QueryResult {
     .catch(error => {
       setError(error);
     })
-  }, [searchParams.brand, searchParams.size])
+  }, [searchParams.size])
 
 
   return [data, error, "virsotne.lv"];

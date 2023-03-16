@@ -1,5 +1,4 @@
 export interface SearchParams {
-  brand: string;
   size: number;
 }
 
