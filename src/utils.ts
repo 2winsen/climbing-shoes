@@ -4,6 +4,8 @@ import responseEpicTv from "./mock-epictv.json"
 import startCase from "lodash-es/startCase";
 import { useEffect, useState } from "react";
 
+const USE_MOCKS = false;
+
 export function fetchMock(url: string): Promise<Response> {
   let response: any;
   let timeout = 500;
@@ -55,4 +57,18 @@ export function useTimeout(condition: boolean, timeout: number) {
     }
   }, [condition]);
   return ready;
+}
+
+export function fetchWrapper(url: string) {
+  if (USE_MOCKS) {
+    return fetchMock(url);
+  }
+  return fetch(url);
+}
+
+/**
+ * https://corsproxy.io/
+ */
+export function withCorsProxy(url: string) {
+  return 'https://corsproxy.io/?' + encodeURIComponent(url);
 }

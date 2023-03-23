@@ -1,5 +1,5 @@
 export interface SearchParams {
-  size: number;
+  size?: string;
 }
 
 export interface Product {

@@ -11,8 +11,8 @@ function Landing() {
   }
 
   function handleSizeChange(e: ChangeEvent<HTMLInputElement>) {
-    const sizeInt = parseInt(e.target.value, 10);
-    setSize(isNaN(sizeInt) ? "any" : sizeInt.toString());
+    const value = e.target.value.trim();
+    setSize(value === "" ? "any" : value);
   }
 
   return (
