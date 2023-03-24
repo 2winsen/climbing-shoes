@@ -3,8 +3,7 @@ import responseOliunid from "./mock-oliunid.json"
 import responseEpicTv from "./mock-epictv.json"
 import startCase from "lodash-es/startCase";
 import { useEffect, useState } from "react";
-
-const USE_MOCKS = false;
+import { USE_MOCKS } from "./conf";
 
 export function fetchMock(url: string): Promise<Response> {
   let response: any;

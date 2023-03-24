@@ -46,25 +46,22 @@ const sizeMap: Record<string, { paramName: string, paramValue: string }> = {
 
 export function useVirsotne(searchParams: SearchParams): QueryResult {
   const [data, setData] = useState<Product[]>();
-  const [error, setError] = useState();
+  const [error, setError] = useState<unknown>();
 
   useEffect(() => {
-    let page = 1;
-    async function fetchData() {
+    async function fetchSinglePage(pageNumber: number) {
       const products: Product[] = [];
       const url = new URL('https://virsotne.lv/modules/blocklayered/blocklayered-ajax.php?id_category_layered=72');
       if (searchParams.size) {
         const sizeMapParamValue = sizeMap[searchParams.size] ?? { paramName: 'unknown', paramValue: 'unknown' };
         url.searchParams.set(sizeMapParamValue.paramName, sizeMapParamValue.paramValue);
+        url.searchParams.set('p', pageNumber.toString());
       }
-      while (true) {
-        url.searchParams.set('p', page.toString());
-        const response = await fetchWrapper(url.toString());
-        const responseJson = await response.json();
-        const productList = responseJson.productList;
-        if (!productList) {
-          break;
-        }
+      const response = await fetchWrapper(url.toString());
+      const responseJson = await response.json();
+      const { productList, nbAskedProducts, nbRenderedProducts } = responseJson;
+      const totalPagesCount = Math.ceil((+nbAskedProducts) / (+nbRenderedProducts));
+      if (productList) {
         const el = document.createElement('html');
         el.innerHTML = productList;
         const productsToBeParsed = el.getElementsByClassName("product-container");
@@ -85,17 +82,32 @@ export function useVirsotne(searchParams: SearchParams): QueryResult {
             });
           }
         }
-        page++;
-      };
-      return products;
+      }
+      return { products, totalPagesCount };
     }
-    fetchData()
-      .then(products => {
-        setData(products);
-      })
-      .catch(error => {
-        setError(error);
-      })
+
+    async function fetchAllPages() {
+      const { products, totalPagesCount } = await fetchSinglePage(0);
+      if (totalPagesCount > 1) {
+        let productsFromAllPages: Product[][] = [];
+        productsFromAllPages.push(products);
+        const restPages = Array(totalPagesCount - 1)
+          .fill(0)
+          .map((_, idx) => idx + 1)
+          .map(x => fetchSinglePage(x))
+        const restPagesValues = await Promise.all(restPages)
+        restPagesValues.forEach(restPage => {
+          productsFromAllPages.push(restPage.products);
+        });
+        return productsFromAllPages.flat();
+      } else {
+        return products;
+      }
+    }
+
+    fetchAllPages()
+      .then(products => setData(products))
+      .catch(error => setError(error));
   }, [searchParams.size])
 
 
