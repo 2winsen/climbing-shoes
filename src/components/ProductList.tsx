@@ -59,6 +59,7 @@ export function ProductList({ products }: Props) {
           rowHeight={100}
           enableCellTextSelection
         />
+        <div>Total: {products.length}</div>
       </div>
     </div>
   )

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import { VERBOSE_LOGGING } from "./conf";
 import { Product, QueryResult, SearchParams } from "./types";
 import { capitalize, fetchWrapper } from "./utils";
+
+const NAME = "virsotne.lv";
 
 const sizeMap: Record<string, { paramName: string, paramValue: string }> = {
   "26": { paramName: 'layered_id_attribute_group_5493', paramValue: '5493_9' },
@@ -80,6 +83,8 @@ export function useVirsotne(searchParams: SearchParams): QueryResult {
               sellerUrl,
               seller: new URL(sellerUrl).hostname,
             });
+          } else {
+            console.error(`Insufficient product data. Can't add. Most probably product is not available: ${NAME}`);
           }
         }
       }
@@ -87,13 +92,14 @@ export function useVirsotne(searchParams: SearchParams): QueryResult {
     }
 
     async function fetchAllPages() {
-      const { products, totalPagesCount } = await fetchSinglePage(0);
+      const { products = [], totalPagesCount = 1 } = await fetchSinglePage(1);
       if (totalPagesCount > 1) {
         let productsFromAllPages: Product[][] = [];
         productsFromAllPages.push(products);
-        const restPages = Array(totalPagesCount - 1)
+        const restPages = Array(totalPagesCount)
           .fill(0)
           .map((_, idx) => idx + 1)
+          .filter((_, idx) => idx !== 0)
           .map(x => fetchSinglePage(x))
         const restPagesValues = await Promise.all(restPages)
         restPagesValues.forEach(restPage => {
@@ -106,10 +112,15 @@ export function useVirsotne(searchParams: SearchParams): QueryResult {
     }
 
     fetchAllPages()
-      .then(products => setData(products))
+      .then(products => {
+        if (VERBOSE_LOGGING) {
+          console.log(`${NAME}: ${products.length}`)
+        }
+        setData(products);
+      })
       .catch(error => setError(error));
   }, [searchParams.size])
 
 
-  return [data, error, "virsotne.lv"];
+  return [data, error, NAME];
 }

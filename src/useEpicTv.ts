@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { VERBOSE_LOGGING } from "./conf";
 import { Product, QueryResult, SearchParams } from "./types";
 import { capitalize, fetchWrapper, knownManufacturers, withCorsProxy } from "./utils";
 
+const NAME = "epictv.com";
 
 function split(manufacturerAndProductName: string) {
   const manufacturer = knownManufacturers().find(available =>
@@ -67,20 +69,30 @@ export function useEpicTv(searchParams: SearchParams): QueryResult {
   const [error, setError] = useState();
 
   useEffect(() => {
-    const url = new URL('https://epictv.com/footwear/climbing-shoes');
-    if (searchParams.size) {
-      const sizeMapParamValue = sizeMap[searchParams.size] ?? { paramValue: 'unknown' };
-      url.searchParams.set('amshopby[shoe_size][]', sizeMapParamValue.paramValue);
-      url.searchParams.set('shopbyAjax', '1');
-    }
-    fetch(withCorsProxy(url.toString()))
-      .then(response => response.json())
-      .then(data => data.categoryProducts)
-      .then(productList => {
+    async function fetchSinglePage(pageNumber: number) {
+      const PRODUCT_LIST_LIMIT = 36;
+      const products: Product[] = [];
+      const url = new URL('https://epictv.com/footwear/climbing-shoes');
+      if (searchParams.size) {
+        const sizeMapParamValue = sizeMap[searchParams.size] ?? { paramValue: 'unknown' };
+        if (searchParams.size) {
+          url.searchParams.set('amshopby[shoe_size][]', sizeMapParamValue.paramValue);
+        }
+        url.searchParams.set('shopbyAjax', '1');
+        url.searchParams.set('product_list_limit', PRODUCT_LIST_LIMIT.toString());
+        if (pageNumber > 1) {
+          url.searchParams.set('p', pageNumber.toString());
+          url.searchParams.set('shoe_size', sizeMapParamValue.paramValue);
+        }
+      }
+      const response = await fetchWrapper(withCorsProxy(url.toString()));
+      const responseJson = await response.json();
+      const { categoryProducts, productsCount } = responseJson;
+      const totalPagesCount = Math.ceil((+productsCount) / PRODUCT_LIST_LIMIT);
+      if (categoryProducts) {
         const el = document.createElement('html');
-        el.innerHTML = productList;
+        el.innerHTML = categoryProducts;
         const productsToBeParsed = el.querySelectorAll(".products.list .product-item");
-        const products: Product[] = [];
         for (const product of productsToBeParsed) {
           const manufacturerAndProductName = product.querySelector(".product-item-link")?.textContent;
           const sellerUrl = product.querySelector(".product-item-link")?.getAttribute("href");
@@ -100,15 +112,47 @@ export function useEpicTv(searchParams: SearchParams): QueryResult {
               sellerUrl,
               seller: new URL(sellerUrl).hostname,
             })
+          } else {
+            console.error(`Insufficient product data. Can't add. Most probably product is not available: ${NAME}`);
           }
         }
-        setData(products);
-      })
+      }
+      return { products, totalPagesCount };
+    }
+
+    async function fetchAllPages() {
+      const { products = [], totalPagesCount = 1 } = await fetchSinglePage(1);
+      if (totalPagesCount > 1) {
+        let productsFromAllPages: Product[][] = [];
+        productsFromAllPages.push(products);
+        const restPages = Array(totalPagesCount)
+          .fill(0)
+          .map((_, idx) => idx + 1)
+          .filter((_, idx) => idx !== 0)
+          .map(x => fetchSinglePage(x))
+        const restPagesValues = await Promise.all(restPages)
+        restPagesValues.forEach(restPage => {
+          productsFromAllPages.push(restPage.products);
+        });
+        return productsFromAllPages.flat();
+      } else {
+        return products;
+      }
+    }
+
+    fetchAllPages()
+    .then(products => {
+      if (VERBOSE_LOGGING) {
+        console.log(`${NAME}: ${products.length}`)
+      }
+      setData(products);
+    })
       .catch(error => {
+        console.error(error);
         setError(error);
-      })
+      });
   }, [searchParams.size])
 
 
-  return [data, error, "epictv.com"];
+  return [data, error, NAME];
 }

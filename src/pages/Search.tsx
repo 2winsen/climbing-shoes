@@ -15,8 +15,8 @@ function Search() {
 
   const queryVirsotne = useVirsotne({ size });
   // const queryOliunid = useOliunid({ size });
-  // const queryEpicTv = useEpicTv({ size });
-  const all = [queryVirsotne];
+  const queryEpicTv = useEpicTv({ size });
+  const all = [queryVirsotne, queryEpicTv];
   const ready = all.every(([data, error]) => data || error);
   const readyTimeout = useTimeout(ready, 500);
   
