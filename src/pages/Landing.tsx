@@ -1,9 +1,10 @@
 import { ChangeEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ANY_SIZE } from '../utils';
 import styles from './Landing.module.scss';
 
 function Landing() {
-  const [size, setSize] = useState<string>("any");
+  const [size, setSize] = useState<string>(ANY_SIZE);
   const navigate = useNavigate();
 
   function handleFind() {
@@ -12,7 +13,7 @@ function Landing() {
 
   function handleSizeChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value.trim();
-    setSize(value === "" ? "any" : value);
+    setSize(value === "" ? ANY_SIZE : value);
   }
 
   return (

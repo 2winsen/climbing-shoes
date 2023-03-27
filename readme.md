@@ -1,8 +1,7 @@
 MVP
-- query params size
-- load data from all pages with Promise.all
 - fix mock with all pages
 - display discounts
+- filter by seller by brand
 
 Nice to have
 - add bananafingers data

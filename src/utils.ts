@@ -1,6 +1,6 @@
-import responseVirsotne from "./mock-virsotne.json"
-import responseOliunid from "./mock-oliunid.json"
-import responseEpicTv from "./mock-epictv.json"
+import responseVirsotne from "./mocks/mock-virsotne.json"
+import responseOliunid from "./mocks/mock-oliunid.json"
+import responseEpicTv from "./mocks/mock-epictv.json"
 import startCase from "lodash-es/startCase";
 import { useEffect, useState } from "react";
 import { USE_MOCKS } from "./conf";
@@ -18,14 +18,14 @@ export function fetchMock(url: string): Promise<Response> {
     response = responseEpicTv;
     timeout = 1500;
   }
-  return new Promise((res, rej) => {
+  return new Promise((res, _) => {
     setTimeout(() => {
       res({ json: () => response } as unknown as Response);
     }, timeout);
   });
 }
 
-export function capitalize(value: string) {
+export function startCaseLowerCase(value: string) {
   return startCase(value.toLowerCase());
 }
 
@@ -71,3 +71,12 @@ export function fetchWrapper(url: string) {
 export function withCorsProxy(url: string) {
   return 'https://corsproxy.io/?' + encodeURIComponent(url);
 }
+
+export function htmlToElement(html: string) {
+  var template = document.createElement('template');
+  html = html.trim();
+  template.innerHTML = html;
+  return template.content;
+}
+
+export const ANY_SIZE = "any";

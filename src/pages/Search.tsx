@@ -1,25 +1,30 @@
 import { flatten } from 'lodash-es';
 import { Loading } from '../components/Loading/Loading';
 import { Product } from '../types';
-import { useEpicTv } from '../useEpicTv';
-import { useOliunid } from '../useOliunid';
-import { useVirsotne } from '../useVirsotne'
-import { useTimeout } from '../utils';
+import { ANY_SIZE, useTimeout } from '../utils';
 import { ProductList } from '../components/ProductList';
 import styles from './Search.module.scss';
 import { useSearchParams } from 'react-router-dom';
+import { useFetch } from '../services/useFetch';
+import { createFetchVirsotne } from '../services/fetchVirsotne';
+import { createFetchEpicTv } from '../services/fetchEpicTv';
+import { createFetchOliunid } from '../services/fetchOliunid';
 
 function Search() {
   let [searchParams] = useSearchParams();
-  const size = searchParams.get('size') ?? undefined;
+  const sizeParam = searchParams.get('size');
+  const size = (sizeParam === ANY_SIZE || sizeParam == null)
+    ? undefined
+    : sizeParam;
 
-  const queryVirsotne = useVirsotne({ size });
-  // const queryOliunid = useOliunid({ size });
-  const queryEpicTv = useEpicTv({ size });
-  const all = [queryVirsotne, queryEpicTv];
+  const queryVirsotne = useFetch("virsotne.lv", { size }, createFetchVirsotne);
+  const queryEpicTv = useFetch("epictv.com", { size }, createFetchEpicTv);
+  const queryOliunid = useFetch("oliunid.com", { size }, createFetchOliunid);
+  const all = [queryVirsotne, queryEpicTv, queryOliunid];
+
   const ready = all.every(([data, error]) => data || error);
   const readyTimeout = useTimeout(ready, 500);
-  
+
   if (!readyTimeout) {
     return <Loading items={all} />
   }
