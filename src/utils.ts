@@ -1,5 +1,5 @@
 import responseVirsotne from "./mocks/mock-virsotne.json"
-import responseOliunid from "./mocks/mock-oliunid.json"
+import responseOliunid from "./mocks/mock-oliunid.html?raw"
 import responseEpicTv from "./mocks/mock-epictv.json"
 import startCase from "lodash-es/startCase";
 import { useEffect, useState } from "react";
@@ -20,7 +20,10 @@ export function fetchMock(url: string): Promise<Response> {
   }
   return new Promise((res, _) => {
     setTimeout(() => {
-      res({ json: () => response } as unknown as Response);
+      res({ 
+        json: () => response,
+        text: () => response,
+      } as unknown as Response);
     }, timeout);
   });
 }

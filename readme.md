@@ -1,7 +1,8 @@
 MVP
-- fix mock with all pages
+- fix epic tv by sizes (html parser?)
+- display header with return home
 - display discounts
-- filter by seller by brand
+- create better layout mobile first
 
 Nice to have
 - add bananafingers data

@@ -62,53 +62,57 @@ const sizeMap: Record<string, { paramValue: string }> = {
 
 export function createFetchEpicTv(name: string, searchParams: SearchParams) {
   return async function (pageNumber: number) {
-    const PRODUCT_LIST_LIMIT = 36;
-    const products: Product[] = [];
-    const url = new URL('https://epictv.com/footwear/climbing-shoes');
-    if (searchParams.size) {
-      const sizeMapParamValue = sizeMap[searchParams.size] ?? { paramValue: 'unknown' };
-      url.searchParams.set('amshopby[shoe_size][]', sizeMapParamValue.paramValue);
-      if (pageNumber > 1) {
-        url.searchParams.set('shoe_size', sizeMapParamValue.paramValue);
-      }
-    }
-    url.searchParams.set('shopbyAjax', '1');
-    url.searchParams.set('product_list_limit', PRODUCT_LIST_LIMIT.toString());
-    if (pageNumber > 1) {
-      url.searchParams.set('p', pageNumber.toString());
-    }
-    const response = await fetchWrapper(withCorsProxy(url.toString()));
-    const responseJson = await response.json();
-    const { categoryProducts, productsCount } = responseJson;
-    const totalPagesCount = Math.ceil((+productsCount) / PRODUCT_LIST_LIMIT);
-    if (categoryProducts) {
-      const el = document.createElement('html');
-      el.innerHTML = categoryProducts;
-      const productsToBeParsed = el.querySelectorAll(".products.list .product-item");
-      for (const product of productsToBeParsed) {
-        const manufacturerAndProductName = product.querySelector(".product-item-link")?.textContent;
-        const sellerUrl = product.querySelector(".product-item-link")?.getAttribute("href");
-        const price = product.querySelector(".price")?.textContent;
-        const imageUrl = (product.querySelector(".product-image-photo") as HTMLElement)?.getAttribute("src");
-        if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
-          const [manufacturer, productName] = split(
-            manufacturerAndProductName
-              .replace("Climbing Shoe", "")
-              .trim()
-          );
-          products.push({
-            imageUrl,
-            manufacturer: startCaseLowerCase(manufacturer),
-            productName: startCaseLowerCase(productName),
-            price: parseFloat(String(price).slice(1)),
-            sellerUrl,
-            seller: new URL(sellerUrl).hostname,
-          })
-        } else {
-          console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);
+    try {
+      const PRODUCT_LIST_LIMIT = 36;
+      const products: Product[] = [];
+      const url = new URL('https://epictv.com/footwear/climbing-shoes');
+      if (searchParams.size) {
+        const sizeMapParamValue = sizeMap[searchParams.size] ?? { paramValue: 'unknown' };
+        url.searchParams.set('amshopby[shoe_size][]', sizeMapParamValue.paramValue);
+        if (pageNumber > 1) {
+          url.searchParams.set('shoe_size', sizeMapParamValue.paramValue);
         }
       }
+      url.searchParams.set('shopbyAjax', '1');
+      url.searchParams.set('product_list_limit', PRODUCT_LIST_LIMIT.toString());
+      if (pageNumber > 1) {
+        url.searchParams.set('p', pageNumber.toString());
+      }
+      const response = await fetchWrapper(withCorsProxy(url.toString()));
+      const responseJson = await response.json();
+      const { categoryProducts, productsCount } = responseJson;
+      const totalPagesCount = Math.ceil((+productsCount) / PRODUCT_LIST_LIMIT);
+      if (categoryProducts) {
+        const el = document.createElement('html');
+        el.innerHTML = categoryProducts;
+        const productsToBeParsed = el.querySelectorAll(".products.list .product-item");
+        for (const product of productsToBeParsed) {
+          const manufacturerAndProductName = product.querySelector(".product-item-link")?.textContent;
+          const sellerUrl = product.querySelector(".product-item-link")?.getAttribute("href");
+          const price = product.querySelector(".price")?.textContent;
+          const imageUrl = (product.querySelector(".product-image-photo") as HTMLElement)?.getAttribute("src");
+          if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
+            const [manufacturer, productName] = split(
+              manufacturerAndProductName
+                .replace("Climbing Shoe", "")
+                .trim()
+            );
+            products.push({
+              imageUrl,
+              manufacturer: startCaseLowerCase(manufacturer),
+              productName: startCaseLowerCase(productName),
+              price: parseFloat(String(price).slice(1)),
+              sellerUrl,
+              seller: new URL(sellerUrl).hostname,
+            })
+          } else {
+            console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);
+          }
+        }
+      }
+      return { products, totalPagesCount };
+    } catch (e) {
+      throw e;
     }
-    return { products, totalPagesCount };
   }
 }

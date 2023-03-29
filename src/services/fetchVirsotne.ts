@@ -45,41 +45,45 @@ const sizeMap: Record<string, { paramName: string, paramValue: string }> = {
 
 export function createFetchVirsotne(name: string, searchParams: SearchParams) {
   return async function (pageNumber: number) {
-    const products: Product[] = [];
-    const url = new URL('https://virsotne.lv/modules/blocklayered/blocklayered-ajax.php?id_category_layered=72');
-    if (searchParams.size) {
-      const sizeMapParamValue = sizeMap[searchParams.size] ?? { paramName: 'unknown', paramValue: 'unknown' };
-      url.searchParams.set(sizeMapParamValue.paramName, sizeMapParamValue.paramValue);
-    }
-    url.searchParams.set('p', pageNumber.toString());
-    const response = await fetchWrapper(url.toString());
-    const responseJson = await response.json();
-    const { productList, nbAskedProducts, nbRenderedProducts } = responseJson;
-    const totalPagesCount = Math.ceil((+nbRenderedProducts) / (+nbAskedProducts));
-    if (productList) {
-      const el = document.createElement('html');
-      el.innerHTML = productList;
-      const productsToBeParsed = el.getElementsByClassName("product-container");
-      for (const product of productsToBeParsed) {
-        const manufacturer = product.querySelector(".product-manufacturer img")?.getAttribute("title");
-        const productName = product.querySelector(".product-name")?.getAttribute("title");
-        const sellerUrl = product.querySelector(".product-name")?.getAttribute("href");
-        const price = product.querySelector(".content_price .price")?.textContent;
-        const imageUrl = product.querySelector(".product-image-container .img-responsive")?.getAttribute("src");
-        if (manufacturer && productName && price && imageUrl && sellerUrl) {
-          products.push({
-            imageUrl,
-            manufacturer: startCaseLowerCase(manufacturer),
-            productName: startCaseLowerCase(productName.replace(/^Klin.*kurpes /g, "").trim()),
-            price: parseFloat(price),
-            sellerUrl,
-            seller: new URL(sellerUrl).hostname,
-          });
-        } else {
-          console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);
+    try {
+      const products: Product[] = [];
+      const url = new URL('https://virsotne.lv/modules/blocklayered/blocklayered-ajax.php?id_category_layered=72');
+      if (searchParams.size) {
+        const sizeMapParamValue = sizeMap[searchParams.size] ?? { paramName: 'unknown', paramValue: 'unknown' };
+        url.searchParams.set(sizeMapParamValue.paramName, sizeMapParamValue.paramValue);
+      }
+      url.searchParams.set('p', pageNumber.toString());
+      const response = await fetchWrapper(url.toString());
+      const responseJson = await response.json();
+      const { productList, nbAskedProducts, nbRenderedProducts } = responseJson;
+      const totalPagesCount = Math.ceil((+nbRenderedProducts) / (+nbAskedProducts));
+      if (productList) {
+        const el = document.createElement('html');
+        el.innerHTML = productList;
+        const productsToBeParsed = el.getElementsByClassName("product-container");
+        for (const product of productsToBeParsed) {
+          const manufacturer = product.querySelector(".product-manufacturer img")?.getAttribute("title");
+          const productName = product.querySelector(".product-name")?.getAttribute("title");
+          const sellerUrl = product.querySelector(".product-name")?.getAttribute("href");
+          const price = product.querySelector(".content_price .price")?.textContent;
+          const imageUrl = product.querySelector(".product-image-container .img-responsive")?.getAttribute("src");
+          if (manufacturer && productName && price && imageUrl && sellerUrl) {
+            products.push({
+              imageUrl,
+              manufacturer: startCaseLowerCase(manufacturer),
+              productName: startCaseLowerCase(productName.replace(/^Klin.*kurpes /g, "").trim()),
+              price: parseFloat(price),
+              sellerUrl,
+              seller: new URL(sellerUrl).hostname,
+            });
+          } else {
+            console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);
+          }
         }
       }
+      return { products, totalPagesCount };
+    } catch (e) {
+      throw e;
     }
-    return { products, totalPagesCount };
   }
 }
