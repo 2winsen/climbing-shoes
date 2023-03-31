@@ -1,6 +1,6 @@
-import responseVirsotne from "./mocks/mock-virsotne.json"
-import responseOliunid from "./mocks/mock-oliunid.html?raw"
-import responseEpicTv from "./mocks/mock-epictv.json"
+import responseVirsotne from "./mocks/mock-virsotne.json";
+import responseOliunid from "./mocks/mock-oliunid.html?raw";
+import responseEpicTv from "./mocks/mock-epictv.html?raw";
 import startCase from "lodash-es/startCase";
 import { useEffect, useState } from "react";
 import { USE_MOCKS } from "./conf";
@@ -13,10 +13,10 @@ export function fetchMock(url: string): Promise<Response> {
     timeout = 500;
   } else if (url.includes("oliunid")) {
     response = responseOliunid;
-    timeout = 1000;
+    // timeout = 1000;
   } else {
     response = responseEpicTv;
-    timeout = 1500;
+    // timeout = 1500;
   }
   return new Promise((res, _) => {
     setTimeout(() => {

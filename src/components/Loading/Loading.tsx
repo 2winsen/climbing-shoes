@@ -12,6 +12,7 @@ export function Loading({
   return (
     <div className={styles.loading}>
       {items.map(([data, error, title]) => <LoadingItem key={title} title={title} data={data} error={error} />)}
+      <span className={styles.footnote}>*Sometimes loading might take ~15 seconds or less</span>
     </div>
   )
 }

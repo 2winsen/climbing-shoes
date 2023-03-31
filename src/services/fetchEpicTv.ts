@@ -1,5 +1,5 @@
 import { Product, SearchParams } from "../types";
-import { startCaseLowerCase, fetchWrapper, knownManufacturers, withCorsProxy } from "../utils";
+import { startCaseLowerCase, fetchWrapper, knownManufacturers, withCorsProxy, htmlToElement } from "../utils";
 
 function split(manufacturerAndProductName: string) {
   const manufacturer = knownManufacturers().find(available =>
@@ -69,9 +69,6 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
       if (searchParams.size) {
         const sizeMapParamValue = sizeMap[searchParams.size] ?? { paramValue: 'unknown' };
         url.searchParams.set('amshopby[shoe_size][]', sizeMapParamValue.paramValue);
-        if (pageNumber > 1) {
-          url.searchParams.set('shoe_size', sizeMapParamValue.paramValue);
-        }
       }
       url.searchParams.set('shopbyAjax', '1');
       url.searchParams.set('product_list_limit', PRODUCT_LIST_LIMIT.toString());
@@ -79,35 +76,42 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
         url.searchParams.set('p', pageNumber.toString());
       }
       const response = await fetchWrapper(withCorsProxy(url.toString()));
-      const responseJson = await response.json();
-      const { categoryProducts, productsCount } = responseJson;
-      const totalPagesCount = Math.ceil((+productsCount) / PRODUCT_LIST_LIMIT);
-      if (categoryProducts) {
-        const el = document.createElement('html');
-        el.innerHTML = categoryProducts;
-        const productsToBeParsed = el.querySelectorAll(".products.list .product-item");
-        for (const product of productsToBeParsed) {
-          const manufacturerAndProductName = product.querySelector(".product-item-link")?.textContent;
-          const sellerUrl = product.querySelector(".product-item-link")?.getAttribute("href");
-          const price = product.querySelector(".price")?.textContent;
-          const imageUrl = (product.querySelector(".product-image-photo") as HTMLElement)?.getAttribute("src");
-          if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
-            const [manufacturer, productName] = split(
-              manufacturerAndProductName
-                .replace("Climbing Shoe", "")
-                .trim()
-            );
-            products.push({
-              imageUrl,
-              manufacturer: startCaseLowerCase(manufacturer),
-              productName: startCaseLowerCase(productName),
-              price: parseFloat(String(price).slice(1)),
-              sellerUrl,
-              seller: new URL(sellerUrl).hostname,
-            })
-          } else {
-            console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);
-          }
+      const responseText = await response.text();
+      const body1Idx = responseText.indexOf("<body");
+      const body2Term = "</body>";
+      const body2Idx = responseText.indexOf(body2Term);
+      const body = responseText.substring(body1Idx, body2Idx + body2Term.length);
+      const el = htmlToElement(body);
+      const pagesItems = el.querySelectorAll(".pages li.item:not(.pages-item-next)");
+      const lastPageItem = pagesItems[pagesItems.length - 1]
+        ?.textContent
+        ?.replace(/\s+/g, ' ')
+        ?.trim()
+        ?.split(" ")
+        .reverse()[0];
+      const totalPagesCount = +(lastPageItem ?? 1);
+      const productsToBeParsed = el.querySelectorAll(".products.list .product-item");
+      for (const product of productsToBeParsed) {
+        const manufacturerAndProductName = product.querySelector(".product-item-link")?.textContent;
+        const sellerUrl = product.querySelector(".product-item-link")?.getAttribute("href");
+        const price = product.querySelector(".price")?.textContent;
+        const imageUrl = (product.querySelector(".product-image-photo") as HTMLElement)?.getAttribute("src");
+        if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
+          const [manufacturer, productName] = split(
+            manufacturerAndProductName
+              .replace("Climbing Shoe", "")
+              .trim()
+          );
+          products.push({
+            imageUrl,
+            manufacturer: startCaseLowerCase(manufacturer),
+            productName: startCaseLowerCase(productName),
+            price: parseFloat(String(price).slice(1)),
+            sellerUrl,
+            seller: new URL(sellerUrl).hostname,
+          })
+        } else {
+          console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);
         }
       }
       return { products, totalPagesCount };
