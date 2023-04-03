@@ -13,31 +13,25 @@ import { createFetchOliunid } from '../services/fetchOliunid';
 function Search() {
   let [searchParams] = useSearchParams();
   const sizeParam = searchParams.get('size');
-  const size = (sizeParam === ANY_SIZE || sizeParam == null)
-    ? undefined
-    : sizeParam;
+  const size = sizeParam === ANY_SIZE || sizeParam == null ? undefined : sizeParam;
 
-  const queryVirsotne = useFetch("virsotne.lv", { size }, createFetchVirsotne);
-  const queryEpicTv = useFetch("epictv.com", { size }, createFetchEpicTv);
-  const queryOliunid = useFetch("oliunid.com", { size }, createFetchOliunid);
+  const queryVirsotne = useFetch('virsotne.lv', { size }, createFetchVirsotne);
+  const queryEpicTv = useFetch('epictv.com', { size }, createFetchEpicTv);
+  const queryOliunid = useFetch('oliunid.com', { size }, createFetchOliunid);
   const all = [queryVirsotne, queryEpicTv, queryOliunid];
 
   const ready = all.every(([data, error]) => data || error);
   const readyTimeout = useTimeout(ready, 500);
 
   if (!readyTimeout) {
-    return <Loading items={all} />
+    return <Loading items={all} />;
   }
-  const products = flatten(
-    all
-      .filter(([data]) => data)
-      .map(([data]) => data as Product[])
-  )
+  const products = flatten(all.filter(([data]) => data).map(([data]) => data as Product[]));
   return (
     <div className={styles.search}>
       <ProductList products={products} />
     </div>
-  )
+  );
 }
 
-export default Search
+export default Search;

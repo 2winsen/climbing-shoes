@@ -13,6 +13,7 @@ export interface Product {
 
 export type QueryResult = [Product[] | undefined, any, string];
 
-export type CreateFetchSinglePage =
-  (name: string, searchParams: SearchParams) =>
-    (page: number) => Promise<{ products: Product[], totalPagesCount: number }>;
+export type CreateFetchSinglePage = (
+  name: string,
+  searchParams: SearchParams
+) => (page: number) => Promise<{ products: Product[]; totalPagesCount: number }>;

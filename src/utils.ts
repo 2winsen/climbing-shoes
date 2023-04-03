@@ -1,17 +1,17 @@
-import responseVirsotne from "./mocks/mock-virsotne.json";
-import responseOliunid from "./mocks/mock-oliunid.html?raw";
-import responseEpicTv from "./mocks/mock-epictv.html?raw";
-import startCase from "lodash-es/startCase";
-import { useEffect, useState } from "react";
-import { USE_MOCKS } from "./conf";
+import responseVirsotne from './mocks/mock-virsotne.json';
+import responseOliunid from './mocks/mock-oliunid.html?raw';
+import responseEpicTv from './mocks/mock-epictv.html?raw';
+import startCase from 'lodash-es/startCase';
+import { useEffect, useState } from 'react';
+import { USE_MOCKS } from './conf';
 
 export function fetchMock(url: string): Promise<Response> {
   let response: any;
   let timeout = 500;
-  if (url.includes("virsotne")) {
+  if (url.includes('virsotne')) {
     response = responseVirsotne;
     timeout = 500;
-  } else if (url.includes("oliunid")) {
+  } else if (url.includes('oliunid')) {
     response = responseOliunid;
     // timeout = 1000;
   } else {
@@ -20,7 +20,7 @@ export function fetchMock(url: string): Promise<Response> {
   }
   return new Promise((res, _) => {
     setTimeout(() => {
-      res({ 
+      res({
         json: () => response,
         text: () => response,
       } as unknown as Response);
@@ -34,20 +34,20 @@ export function startCaseLowerCase(value: string) {
 
 export function knownManufacturers() {
   return [
-    "Andrea Boldrini",
-    "Black Diamond",
-    "Boreal",
-    "Butora",
-    "EB",
-    "Evolv",
-    "Five Ten",
-    "La Sportiva",
-    "Ocun",
-    "Red Chili",
-    "Scarpa",
-    "Tenaya",
-    "Unparallel",
-    "Wild Climb",
+    'Andrea Boldrini',
+    'Black Diamond',
+    'Boreal',
+    'Butora',
+    'EB',
+    'Evolv',
+    'Five Ten',
+    'La Sportiva',
+    'Ocun',
+    'Red Chili',
+    'Scarpa',
+    'Tenaya',
+    'Unparallel',
+    'Wild Climb',
   ];
 }
 
@@ -82,4 +82,4 @@ export function htmlToElement(html: string) {
   return template.content;
 }
 
-export const ANY_SIZE = "any";
+export const ANY_SIZE = 'any';

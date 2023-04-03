@@ -13,7 +13,7 @@ function Landing() {
 
   function handleSizeChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value.trim();
-    setSize(value === "" ? ANY_SIZE : value);
+    setSize(value === '' ? ANY_SIZE : value);
   }
 
   return (
@@ -24,7 +24,7 @@ function Landing() {
         <button onClick={handleFind}>Find</button>
       </form>
     </div>
-  )
+  );
 }
 
-export default Landing
+export default Landing;

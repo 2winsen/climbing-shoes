@@ -1,5 +1,5 @@
-import { Product } from "../../types";
-import { Indicator } from "./Indicator";
+import { Product } from '../../types';
+import { Indicator } from './Indicator';
 import styles from './LoadingItem.module.scss';
 
 interface Props {
@@ -8,21 +8,17 @@ interface Props {
   title: string;
 }
 
-export function LoadingItem({
-  data,
-  error,
-  title,
-}: Props) {
+export function LoadingItem({ data, error, title }: Props) {
   let indicator: React.ReactNode = <Indicator />;
   if (data) {
-    indicator = "✔️";
+    indicator = '✔️';
   } else if (error) {
-    indicator = "❌";
+    indicator = '❌';
   }
   return (
     <div className={styles.item}>
       <span className={styles.title}>{title}</span>
       <span className={styles.indicator}>{indicator}</span>
     </div>
-  )
+  );
 }
