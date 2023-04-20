@@ -32,6 +32,10 @@ export function startCaseLowerCase(value: string) {
   return startCase(value.toLowerCase());
 }
 
+export function removeWww(value: string) {
+  return value.match(/^www\.(.*)/)?.[1] ?? value;
+}
+
 export function knownManufacturers() {
   return [
     'Andrea Boldrini',

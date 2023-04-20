@@ -1,0 +1,12 @@
+@use '../variables.scss' as v;
+
+.productList {
+  height: calc(100% - v.$headerHeight);
+  width: 100%;
+}
+
+@media only screen and (min-width: 768px) {
+  .productList {
+    width: 70vw;
+  }
+}

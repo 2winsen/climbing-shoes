@@ -12,7 +12,7 @@ export function Loading({ items }: Props) {
       {items.map(([data, error, title]) => (
         <LoadingItem key={title} title={title} data={data} error={error} />
       ))}
-      <span className={styles.footnote}>*Sometimes loading might take ~15 seconds or less</span>
+      <span className={styles.footnote}>*Sometimes loading might take ~20 seconds or less</span>
     </div>
   );
 }

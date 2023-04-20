@@ -7,6 +7,8 @@ import { useCallback, useMemo, useRef } from 'react';
 import { Product } from '../types';
 import { ProductImageCellRenderer } from './ProductImageCellRenderer';
 import { SellerUrlCellRenderer } from './SellerUrlCellRenderer';
+import { VERBOSE_LOGGING } from '../conf';
+import styles from './ProductList.module.scss';
 
 interface Props {
   products: Product[];
@@ -14,31 +16,41 @@ interface Props {
 
 export function ProductList({ products }: Props) {
   const gridRef = useRef<AgGridReact<Product>>(null);
-  const containerStyle = useMemo(() => ({ maxWidth: '900px', width: '100%', height: '100vh' }), []);
-  const gridStyle = useMemo(() => ({ maxWidth: '900px', width: '100%', height: '100vh' }), []);
 
   const columnDefs = useMemo<(ColDef | ColGroupDef)[]>(
     () => [
       {
         field: 'imageUrl',
+        headerName: 'Image',
         sortable: false,
         filter: false,
         cellRenderer: ProductImageCellRenderer,
+        minWidth: 130,
       },
-      { field: 'manufacturer' },
-      { field: 'productName' },
       {
         field: 'price',
-        maxWidth: 155,
-        headerName: 'Price €',
+        minWidth: 90,
+        headerName: '€',
         sort: 'asc',
         valueFormatter: (param) => Number(param.value).toFixed(2),
       },
-      { field: 'seller' },
-      { field: 'sellerUrl', cellRenderer: SellerUrlCellRenderer },
+      { field: 'manufacturer', minWidth: 120, headerTooltip: 'Manufacturer' },
+      { field: 'productName', headerName: 'Product', minWidth: 120 },
+      {
+        field: 'sellerUrl',
+        headerName: 'URL',
+        cellRenderer: SellerUrlCellRenderer,
+        minWidth: 130,
+        sortable: false,
+        filter: false,
+      },
     ],
     []
   );
+
+  const width = columnDefs.length * 8;
+  const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
+  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
   // DefaultColDef sets props common to all Columns
   const defaultColDef = useMemo(
@@ -52,22 +64,27 @@ export function ProductList({ products }: Props) {
 
   const onFirstDataRendered = useCallback(() => {
     gridRef.current?.api.sizeColumnsToFit();
-  }, []);
+  }, [products]);
+
+  if (VERBOSE_LOGGING) {
+    console.log(`total products: ${products.length}`);
+  }
 
   return (
-    <div style={containerStyle}>
-      <div className="ag-theme-alpine" style={gridStyle}>
-        <AgGridReact
-          ref={gridRef}
-          rowData={products}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          animateRows={true}
-          onFirstDataRendered={onFirstDataRendered}
-          rowHeight={100}
-          enableCellTextSelection
-        />
-        <div>Total: {products.length}</div>
+    <div className={styles.productList}>
+      <div style={containerStyle}>
+        <div className="ag-theme-alpine" style={gridStyle}>
+          <AgGridReact
+            ref={gridRef}
+            rowData={products}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            animateRows={true}
+            onFirstDataRendered={onFirstDataRendered}
+            rowHeight={100}
+            enableCellTextSelection
+          />
+        </div>
       </div>
     </div>
   );

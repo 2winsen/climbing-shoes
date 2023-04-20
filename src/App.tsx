@@ -8,7 +8,7 @@ import Search from './pages/Search';
 function App() {
   return (
     <div className={styles.app}>
-      {USE_MOCKS ? <h5 className={styles.mocksHeader}>DEV mode with MOCKS</h5> : null}
+      {USE_MOCKS ? <span className={styles.mocksHeader}>DEV mode with MOCKS</span> : null}
       <Header />
       <BrowserRouter>
         <Routes>

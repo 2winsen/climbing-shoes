@@ -1,5 +1,5 @@
 import { Product, SearchParams } from '../types';
-import { startCaseLowerCase, fetchWrapper, knownManufacturers, withCorsProxy, htmlToElement } from '../utils';
+import { startCaseLowerCase, fetchWrapper, knownManufacturers, withCorsProxy, htmlToElement, removeWww } from '../utils';
 
 function split(manufacturerAndProductName: string) {
   const manufacturer = knownManufacturers().find((available) =>
@@ -103,7 +103,7 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
             productName: startCaseLowerCase(productName),
             price: parseFloat(String(price).slice(1)),
             sellerUrl,
-            seller: new URL(sellerUrl).hostname,
+            seller: removeWww(new URL(sellerUrl).hostname),
           });
         } else {
           console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);

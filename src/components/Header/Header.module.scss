@@ -1,26 +1,8 @@
+@use '../../variables' as v;
+
 .header {
   position: fixed;
   top: 0;
   width: 100%;
-
-  h1 {
-    color: #213547;
-    padding: 0 1em;
-  }
-
-  a:link {
-    text-decoration: none;
-  }
-
-  a:visited {
-    text-decoration: none;
-  }
-
-  a:hover {
-    text-decoration: none;
-  }
-
-  a:active {
-    text-decoration: none;
-  }
+  height: v.$headerHeight;
 }

@@ -24,11 +24,15 @@ function Search() {
   const readyTimeout = useTimeout(ready, 500);
 
   if (!readyTimeout) {
-    return <Loading items={all} />;
+    return (
+      <div className={styles.loadingWrapper}>
+        <Loading items={all} />
+      </div>
+    );
   }
   const products = flatten(all.filter(([data]) => data).map(([data]) => data as Product[]));
   return (
-    <div className={styles.search}>
+    <div className={styles.searchWrapper}>
       <ProductList products={products} />
     </div>
   );

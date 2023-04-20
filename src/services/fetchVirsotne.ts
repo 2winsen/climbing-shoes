@@ -1,5 +1,5 @@
 import { Product, SearchParams } from '../types';
-import { startCaseLowerCase, fetchWrapper } from '../utils';
+import { startCaseLowerCase, fetchWrapper, removeWww } from '../utils';
 
 const sizeMap: Record<string, { paramName: string; paramValue: string }> = {
   '26': { paramName: 'layered_id_attribute_group_5493', paramValue: '5493_9' },
@@ -122,7 +122,7 @@ export function createFetchVirsotne(name: string, searchParams: SearchParams) {
               productName: startCaseLowerCase(productName.replace(/^Klin.*kurpes /g, '').trim()),
               price: parseFloat(price),
               sellerUrl,
-              seller: new URL(sellerUrl).hostname,
+              seller: removeWww(new URL(sellerUrl).hostname),
             });
           } else {
             console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);

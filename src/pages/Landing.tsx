@@ -18,7 +18,7 @@ function Landing() {
 
   return (
     <div className={styles.landing}>
-      <h1>Find cheap climbing shoes</h1>
+      <h2>Find cheap climbing shoes</h2>
       <form className={styles.form} onSubmit={handleFind}>
         <input type="text" placeholder="size (eu)" onChange={handleSizeChange} />
         <button onClick={handleFind}>Find</button>
