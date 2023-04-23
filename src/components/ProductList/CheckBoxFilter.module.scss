@@ -1,0 +1,25 @@
+.checkboxList {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+}
+
+.checkboxItem {
+  display: flex;
+  flex-direction: row;
+  width: 12em;
+  padding-bottom: 0.6em;
+
+  input {
+    padding-right: 0.5em;
+    width: 1.2em;
+    height: 1.2em;
+  }
+
+  span {
+    font-size: 1.2em;
+    margin-left: 0.3em;
+    position: relative;
+    top: -0.15em;
+  }
+}

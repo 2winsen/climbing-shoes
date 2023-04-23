@@ -4,7 +4,7 @@ export function Header() {
   return (
     <div className={styles.header}>
       <a href="/">
-        <h1>Climbing shoes</h1>
+        <span className={styles.headerText}>Climbing shoes</span>
       </a>
     </div>
   );

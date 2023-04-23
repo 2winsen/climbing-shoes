@@ -1,8 +1,13 @@
 MVP
 
-- better filtering mobile first
 - display discounts
 - loading indicator (20seconds)
+- landscape
+- layout fixes
+- sizes tests with real data
+- eslint
+- storybook (screenshot tests)
+- text filter
 
 Nice to have
 

@@ -1,0 +1,24 @@
+@use '../../variables.scss' as v;
+
+.productList {
+  height: calc(100% - v.$headerHeight);
+  width: 100%;
+}
+
+@media only screen and (min-width: 768px) {
+  .productList {
+    width: 70vw;
+  }
+}
+
+.howToFilter {
+  font-size: 0.8em;
+  font-weight: bold;
+  color: #66cdaa;
+}
+
+@media only screen and (min-width: 768px) {
+  .howToFilter {
+    display: none;
+  }
+}

@@ -2,7 +2,7 @@ import { flatten } from 'lodash-es';
 import { Loading } from '../components/Loading/Loading';
 import { Product } from '../types';
 import { ANY_SIZE, useTimeout } from '../utils';
-import { ProductList } from '../components/ProductList';
+import { ProductList } from '../components/ProductList/ProductList';
 import styles from './Search.module.scss';
 import { useSearchParams } from 'react-router-dom';
 import { useFetch } from '../services/useFetch';

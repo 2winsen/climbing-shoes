@@ -35,3 +35,10 @@ body {
 input {
   display: inline-block;
 }
+
+.ag-header-cell.ag-header-cell-filtered {
+  background-color: #66cdaa55;
+  .ag-filter-icon {
+    display: none;
+  }
+}
