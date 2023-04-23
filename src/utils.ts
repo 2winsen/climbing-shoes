@@ -3,7 +3,7 @@ import responseOliunid from './mocks/mock-oliunid.html?raw';
 import responseEpicTv from './mocks/mock-epictv.html?raw';
 import startCase from 'lodash-es/startCase';
 import { useEffect, useState } from 'react';
-import { USE_MOCKS } from './conf';
+import { MAX_WAIT, USE_MOCKS } from './conf';
 
 export function fetchMock(url: string): Promise<Response> {
   let response: any;
@@ -69,7 +69,12 @@ export function fetchWrapper(url: string) {
   if (USE_MOCKS) {
     return fetchMock(url);
   }
-  return fetch(url);
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), (MAX_WAIT + 3) * 1000)
+   return fetch(url, { signal: controller.signal }).then(r => {
+    clearTimeout(timeoutId)
+    return r;
+   });
 }
 
 /**

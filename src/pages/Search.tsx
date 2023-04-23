@@ -21,7 +21,7 @@ function Search() {
   const all = [queryVirsotne, queryEpicTv, queryOliunid];
 
   const ready = all.every(([data, error]) => data || error);
-  const readyTimeout = useTimeout(ready, 500);
+  const readyTimeout = useTimeout(ready, 800);
 
   if (!readyTimeout) {
     return (

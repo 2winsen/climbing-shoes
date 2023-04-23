@@ -79,7 +79,7 @@ export const CheckBoxFilter = forwardRef(function CheckBoxFilter(props: IFilterP
       {uniqColumnValues.map((value) => (
         <div key={value} className={styles.checkboxItem}>
           <label>
-            <input type="checkbox" checked={filter[value]} onChange={changeHandler(value)} />
+            <input type="checkbox" checked={filter[value] ?? false} onChange={changeHandler(value)} />
             <span>{value}</span>
           </label>
         </div>
