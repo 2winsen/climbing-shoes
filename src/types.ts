@@ -11,6 +11,7 @@ export interface Product {
   seller: string;
 }
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export type QueryResult = [Product[] | undefined, any, string];
 
 export type CreateFetchSinglePage = (

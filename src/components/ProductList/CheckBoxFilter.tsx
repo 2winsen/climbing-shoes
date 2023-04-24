@@ -1,8 +1,8 @@
-import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import { IDoesFilterPassParams, IFilterParams } from 'ag-grid-community';
-import styles from './CheckBoxFilter.module.scss';
-import { Product } from '../../types';
 import { uniq } from 'lodash-es';
+import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { Product } from '../../types';
+import styles from './CheckBoxFilter.module.scss';
 
 export const CheckBoxFilter = forwardRef(function CheckBoxFilter(props: IFilterParams<Product>, ref) {
   const [filter, setFilter] = useState<Record<string, boolean>>({});
@@ -45,6 +45,7 @@ export const CheckBoxFilter = forwardRef(function CheckBoxFilter(props: IFilterP
         return { value: filter };
       },
 
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       setModel(model: any) {
         setFilter(model == null ? null : model.value);
       },
@@ -52,7 +53,7 @@ export const CheckBoxFilter = forwardRef(function CheckBoxFilter(props: IFilterP
   });
 
   function getAllRows() {
-    let products: Product[] = [];
+    const products: Product[] = [];
     props.api.forEachNode((node) => (node.data ? products.push(node.data) : undefined));
     return products;
   }
@@ -72,6 +73,7 @@ export const CheckBoxFilter = forwardRef(function CheckBoxFilter(props: IFilterP
 
   useEffect(() => {
     props.filterChangedCallback();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
   return (

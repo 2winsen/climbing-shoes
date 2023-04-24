@@ -1,10 +1,10 @@
 MVP
 
+- phone orientation change refresh aggrid
 - display discounts
 - landscape
 - layout fixes
 - sizes tests with real data
-- eslint
 
 Nice to have
 

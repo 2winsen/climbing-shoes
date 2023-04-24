@@ -1,8 +1,7 @@
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import { IDoesFilterPassParams, IFilterParams } from 'ag-grid-community';
-import styles from './NumberFilter.module.scss';
+import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Product } from '../../types';
-import { ChangeEvent } from 'react';
+import styles from './NumberFilter.module.scss';
 
 export const NumberFilter = forwardRef(function NumberFilter(props: IFilterParams<Product>, ref) {
   const [priceFilterValue, setPriceFilterValue] = useState<number>(0);
@@ -42,6 +41,7 @@ export const NumberFilter = forwardRef(function NumberFilter(props: IFilterParam
         return { value: priceFilterValue };
       },
 
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       setModel(model: any) {
         setPriceFilterValue(model == null ? null : model.value);
       },
@@ -49,7 +49,7 @@ export const NumberFilter = forwardRef(function NumberFilter(props: IFilterParam
   });
 
   function getAllRows() {
-    let products: Product[] = [];
+    const products: Product[] = [];
     props.api.forEachNode((node) => (node.data ? products.push(node.data) : undefined));
     return products;
   }
@@ -69,6 +69,7 @@ export const NumberFilter = forwardRef(function NumberFilter(props: IFilterParam
 
   useEffect(() => {
     props.filterChangedCallback();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priceFilterValue]);
 
   return (

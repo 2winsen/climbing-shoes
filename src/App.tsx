@@ -1,11 +1,11 @@
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import styles from './App.module.scss';
+import { DeviceContext } from './DeviceContext';
 import { Header } from './components/Header/Header';
 import { USE_MOCKS } from './conf';
 import Landing from './pages/Landing';
 import Search from './pages/Search';
-import { useEffect, useState } from 'react';
-import { DeviceContext } from './DeviceContext';
 
 function App() {
   const [isDesktop, setIsDesktop] = useState(false);
@@ -15,7 +15,7 @@ function App() {
     if (mediaQuery.matches) {
       setIsDesktop(true);
     }
-  });
+  }, []);
 
   return (
     <DeviceContext.Provider value={isDesktop}>

@@ -4,6 +4,7 @@ import styles from './LoadingItem.module.scss';
 
 interface Props {
   data: Product[] | undefined;
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   error: any;
   title: string;
 }

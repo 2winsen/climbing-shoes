@@ -1,11 +1,12 @@
-import responseVirsotne from './mocks/mock-virsotne.json';
-import responseOliunid from './mocks/mock-oliunid.html?raw';
-import responseEpicTv from './mocks/mock-epictv.html?raw';
 import startCase from 'lodash-es/startCase';
 import { useEffect, useState } from 'react';
 import { MAX_WAIT, USE_MOCKS } from './conf';
+import responseEpicTv from './mocks/mock-epictv.html?raw';
+import responseOliunid from './mocks/mock-oliunid.html?raw';
+import responseVirsotne from './mocks/mock-virsotne.json';
 
 export function fetchMock(url: string): Promise<Response> {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   let response: any;
   let timeout = 500;
   if (url.includes('virsotne')) {
@@ -18,7 +19,7 @@ export function fetchMock(url: string): Promise<Response> {
     response = responseEpicTv;
     // timeout = 1500;
   }
-  return new Promise((res, _) => {
+  return new Promise((res) => {
     setTimeout(() => {
       res({
         json: () => response,
@@ -61,7 +62,7 @@ export function useTimeout(condition: boolean, timeout: number) {
     if (condition) {
       setTimeout(() => setReady(true), timeout);
     }
-  }, [condition]);
+  }, [condition, timeout]);
   return ready;
 }
 
@@ -69,12 +70,12 @@ export function fetchWrapper(url: string) {
   if (USE_MOCKS) {
     return fetchMock(url);
   }
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), (MAX_WAIT + 3) * 1000)
-   return fetch(url, { signal: controller.signal }).then(r => {
-    clearTimeout(timeoutId)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), (MAX_WAIT + 3) * 1000);
+  return fetch(url, { signal: controller.signal }).then((r) => {
+    clearTimeout(timeoutId);
     return r;
-   });
+  });
 }
 
 /**
@@ -85,7 +86,7 @@ export function withCorsProxy(url: string) {
 }
 
 export function htmlToElement(html: string) {
-  var template = document.createElement('template');
+  const template = document.createElement('template');
   html = html.trim();
   template.innerHTML = html;
   return template.content;

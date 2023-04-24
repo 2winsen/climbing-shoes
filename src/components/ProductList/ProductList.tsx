@@ -4,14 +4,14 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
 
 import { useCallback, useContext, useMemo, useRef } from 'react';
-import { Product } from '../../types';
-import { ProductImageCellRenderer } from './ProductImageCellRenderer';
-import { SellerUrlCellRenderer } from './SellerUrlCellRenderer';
+import { DeviceContext } from '../../DeviceContext';
 import { VERBOSE_LOGGING } from '../../conf';
-import styles from './ProductList.module.scss';
+import { Product } from '../../types';
 import { CheckBoxFilter } from './CheckBoxFilter';
 import { NumberFilter } from './NumberFilter';
-import { DeviceContext } from '../../DeviceContext';
+import { ProductImageCellRenderer } from './ProductImageCellRenderer';
+import styles from './ProductList.module.scss';
+import { SellerUrlCellRenderer } from './SellerUrlCellRenderer';
 
 interface Props {
   products: Product[];
@@ -21,7 +21,10 @@ function sellerUrlValueGetter(params: ValueGetterParams<Product>) {
   return params.data?.seller;
 }
 
+const wrapTextCellStyle = { whiteSpace: 'normal', lineHeight: 1.8, paddingTop: '0.4em' };
+
 export function ProductList({ products }: Props) {
+  const isDesktop = useContext(DeviceContext);
   const gridRef = useRef<AgGridReact<Product>>(null);
 
   const columnDefs = useMemo<(ColDef | ColGroupDef)[]>(
@@ -42,12 +45,21 @@ export function ProductList({ products }: Props) {
         valueFormatter: (param) => Number(param.value).toFixed(2),
         filter: NumberFilter,
       },
-      { field: 'manufacturer', minWidth: 120, headerTooltip: 'Manufacturer', filter: CheckBoxFilter },
+      {
+        field: 'manufacturer',
+        minWidth: 120,
+        headerTooltip: 'Manufacturer',
+        filter: CheckBoxFilter,
+        cellStyle: wrapTextCellStyle,
+      },
       {
         field: 'productName',
         headerName: 'Product',
+        tooltipField: 'productName',
+        autoHeight: true,
         minWidth: 120,
         filterParams: { filterOptions: ['contains'] },
+        cellStyle: wrapTextCellStyle,
       },
       {
         field: 'sellerUrl',
@@ -73,7 +85,6 @@ export function ProductList({ products }: Props) {
     []
   );
 
-  const isDesktop = useContext(DeviceContext);
   const howToFilterOffset = isDesktop ? 0 : 1;
   const containerStyle = useMemo(
     () => ({ width: '100%', height: `calc(100% - ${howToFilterOffset}em)` }),
@@ -86,6 +97,7 @@ export function ProductList({ products }: Props) {
 
   const onFirstDataRendered = useCallback(() => {
     gridRef.current?.api.sizeColumnsToFit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [products]);
 
   if (VERBOSE_LOGGING) {
