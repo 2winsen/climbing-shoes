@@ -99,8 +99,9 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
     for (const product of productsToBeParsed) {
       const manufacturerAndProductName = product.querySelector('.product-item-link')?.textContent;
       const sellerUrl = product.querySelector('.product-item-link')?.getAttribute('href');
-      const price = product.querySelector('.price')?.textContent;
-      const imageUrl = (product.querySelector('.product-image-photo') as HTMLElement)?.getAttribute('src');
+      const price = product.querySelector('.normal-price .price')?.textContent;
+      const oldPrice = product.querySelector('.old-price .price-wrapper')?.textContent;
+      const imageUrl = (product.querySelector('.price-box .product-image-photo') as HTMLElement)?.getAttribute('src');
       if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
         const [manufacturer, productName] = split(manufacturerAndProductName.replace('Climbing Shoe', '').trim());
         products.push({
@@ -108,6 +109,7 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
           manufacturer: startCaseLowerCase(manufacturer),
           productName: startCaseLowerCase(productName),
           price: parseFloat(String(price).slice(1)),
+          oldPrice: oldPrice != null ? parseFloat(String(oldPrice).slice(1)) : undefined,
           sellerUrl,
           seller: removeWww(new URL(sellerUrl).hostname),
         });

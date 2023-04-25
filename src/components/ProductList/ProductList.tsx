@@ -3,15 +3,17 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
 
-import { useCallback, useContext, useMemo, useRef } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { DeviceContext } from '../../DeviceContext';
 import { VERBOSE_LOGGING } from '../../conf';
 import { Product } from '../../types';
 import { CheckBoxFilter } from './CheckBoxFilter';
 import { NumberFilter } from './NumberFilter';
+import { PriceCellRenderer } from './PriceCellRenderer';
 import { ProductImageCellRenderer } from './ProductImageCellRenderer';
 import styles from './ProductList.module.scss';
 import { SellerUrlCellRenderer } from './SellerUrlCellRenderer';
+import { useOrientation } from './useOrientation';
 
 interface Props {
   products: Product[];
@@ -42,8 +44,9 @@ export function ProductList({ products }: Props) {
         minWidth: 100,
         headerName: '€',
         sort: 'asc',
-        valueFormatter: (param) => Number(param.value).toFixed(2),
+        cellRenderer: PriceCellRenderer,
         filter: NumberFilter,
+        cellStyle: wrapTextCellStyle,
       },
       {
         field: 'manufacturer',
@@ -103,6 +106,14 @@ export function ProductList({ products }: Props) {
   if (VERBOSE_LOGGING) {
     console.log(`total products: ${products.length}`);
   }
+
+  const orientation = useOrientation();
+  useEffect(() => {
+    const api = gridRef.current?.api;
+    if (api) {
+      api.sizeColumnsToFit();
+    }
+  }, [orientation]);
 
   return (
     <div className={styles.productList}>

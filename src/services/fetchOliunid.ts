@@ -39,7 +39,8 @@ export function createFetchOliunid(name: string, searchParams: SearchParams) {
     for (const product of productsToBeParsed) {
       const manufacturerAndProductName = product.querySelector('.product-item-name')?.textContent;
       const sellerUrl = product.querySelector('.product-item-name .product-item-link')?.getAttribute('href');
-      const price = product.querySelector('.price')?.textContent;
+      const price = product.querySelector('.normal-price .price')?.textContent;
+      const oldPrice = product.querySelector('.old-price .price')?.textContent;
       const imageUrl = (product.querySelector('.product-item-info source') as HTMLElement)?.dataset.srcset;
       if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
         const [manufacturer, productName] = split(manufacturerAndProductName.replace('climbing shoes', '').trim());
@@ -48,6 +49,7 @@ export function createFetchOliunid(name: string, searchParams: SearchParams) {
           manufacturer: startCaseLowerCase(manufacturer),
           productName: startCaseLowerCase(productName),
           price: parseFloat(String(price).slice(1)),
+          oldPrice: oldPrice != null ? parseFloat(String(oldPrice).slice(1)) : undefined,
           sellerUrl,
           seller: removeWww(new URL(sellerUrl).hostname),
         });
