@@ -8,4 +8,4 @@ Nice to have
 - add bananafingers data?
 - add gandrs data?
 - storybook (screenshot tests)
-- text filter
+- text filter (for product name)

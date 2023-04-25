@@ -3,6 +3,7 @@ import {
   fetchWrapper,
   htmlToElement,
   knownManufacturers,
+  priceWithCurrencyToNumber,
   removeWww,
   startCaseLowerCase,
   withCorsProxy,
@@ -39,7 +40,8 @@ export function createFetchOliunid(name: string, searchParams: SearchParams) {
     for (const product of productsToBeParsed) {
       const manufacturerAndProductName = product.querySelector('.product-item-name')?.textContent;
       const sellerUrl = product.querySelector('.product-item-name .product-item-link')?.getAttribute('href');
-      const price = product.querySelector('.normal-price .price')?.textContent;
+      const priceStr = product.querySelector('.normal-price .price')?.textContent;
+      const price = priceWithCurrencyToNumber(priceStr);
       const oldPrice = product.querySelector('.old-price .price')?.textContent;
       const imageUrl = (product.querySelector('.product-item-info source') as HTMLElement)?.dataset.srcset;
       if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
@@ -48,8 +50,8 @@ export function createFetchOliunid(name: string, searchParams: SearchParams) {
           imageUrl,
           manufacturer: startCaseLowerCase(manufacturer),
           productName: startCaseLowerCase(productName),
-          price: parseFloat(String(price).slice(1)),
-          oldPrice: oldPrice != null ? parseFloat(String(oldPrice).slice(1)) : undefined,
+          price,
+          oldPrice: priceWithCurrencyToNumber(oldPrice),
           sellerUrl,
           seller: removeWww(new URL(sellerUrl).hostname),
         });

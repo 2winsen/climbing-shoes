@@ -3,6 +3,7 @@ import {
   fetchWrapper,
   htmlToElement,
   knownManufacturers,
+  priceWithCurrencyToNumber,
   removeWww,
   startCaseLowerCase,
   withCorsProxy,
@@ -74,7 +75,7 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
       const sizeMapParamValue = sizeMap[searchParams.size] ?? {
         paramValue: 'unknown',
       };
-      url.searchParams.set('amshopby[shoe_size][]', sizeMapParamValue.paramValue);
+      url.searchParams.set('shoe_size', sizeMapParamValue.paramValue);
     }
     url.searchParams.set('shopbyAjax', '1');
     url.searchParams.set('product_list_limit', PRODUCT_LIST_LIMIT.toString());
@@ -99,7 +100,8 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
     for (const product of productsToBeParsed) {
       const manufacturerAndProductName = product.querySelector('.product-item-link')?.textContent;
       const sellerUrl = product.querySelector('.product-item-link')?.getAttribute('href');
-      const price = product.querySelector('.normal-price .price')?.textContent;
+      const priceStr = product.querySelector('.normal-price .price')?.textContent;
+      const price = priceWithCurrencyToNumber(priceStr);
       const oldPrice = product.querySelector('.old-price .price-wrapper')?.textContent;
       const imageUrl = (product.querySelector('.price-box .product-image-photo') as HTMLElement)?.getAttribute('src');
       if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
@@ -108,8 +110,8 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
           imageUrl,
           manufacturer: startCaseLowerCase(manufacturer),
           productName: startCaseLowerCase(productName),
-          price: parseFloat(String(price).slice(1)),
-          oldPrice: oldPrice != null ? parseFloat(String(oldPrice).slice(1)) : undefined,
+          price,
+          oldPrice: priceWithCurrencyToNumber(oldPrice),
           sellerUrl,
           seller: removeWww(new URL(sellerUrl).hostname),
         });

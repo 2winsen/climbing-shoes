@@ -88,6 +88,10 @@ const sizeMap: Record<string, { paramName: string; paramValue: string }> = {
   '49': { paramName: 'layered_id_attribute_group_4353', paramValue: '4353_9' },
 };
 
+function isCustomExcludes(productName: string | undefined | null) {
+  return productName && productName.toLowerCase().includes('shoe bag');
+}
+
 export function createFetchVirsotne(name: string, searchParams: SearchParams) {
   return async function (pageNumber: number) {
     const products: Product[] = [];
@@ -114,6 +118,9 @@ export function createFetchVirsotne(name: string, searchParams: SearchParams) {
         const sellerUrl = product.querySelector('.product-name')?.getAttribute('href');
         const price = product.querySelector('.content_price .price')?.textContent;
         const imageUrl = product.querySelector('.product-image-container .img-responsive')?.getAttribute('src');
+        if (isCustomExcludes(productName)) {
+          continue;
+        }
         if (manufacturer && productName && price && imageUrl && sellerUrl) {
           products.push({
             imageUrl,

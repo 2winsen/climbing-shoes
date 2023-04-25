@@ -93,3 +93,7 @@ export function htmlToElement(html: string) {
 }
 
 export const ANY_SIZE = 'any';
+
+export function priceWithCurrencyToNumber(price: string | undefined | null) {
+  return price != null ? parseFloat(String(price).slice(1)) : undefined;
+}
