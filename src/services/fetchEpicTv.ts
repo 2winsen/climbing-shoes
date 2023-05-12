@@ -77,17 +77,17 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
       };
       url.searchParams.set('shoe_size', sizeMapParamValue.paramValue);
     }
-    url.searchParams.set('shopbyAjax', '1');
     url.searchParams.set('product_list_limit', PRODUCT_LIST_LIMIT.toString());
     if (pageNumber > 1) {
       url.searchParams.set('p', pageNumber.toString());
     }
     const response = await fetchWrapper(withCorsProxy(url.toString()));
     const responseText = await response.text();
-    const body1Idx = responseText.indexOf('<body');
-    const body2Term = '</body>';
-    const body2Idx = responseText.indexOf(body2Term);
-    const body = responseText.substring(body1Idx, body2Idx + body2Term.length);
+    const sliceStartTerm = '<body';
+    const sliceStartIdx = responseText.indexOf(sliceStartTerm);
+    const sliceEndTerm = '</body>';
+    const sliceEndIdx = responseText.indexOf(sliceEndTerm);
+    const body = responseText.substring(sliceStartIdx, sliceEndIdx + sliceEndTerm.length);
     const el = htmlToElement(body);
     const pagesItems = el.querySelectorAll('.pages li.item:not(.pages-item-next)');
     const lastPageItem = pagesItems[pagesItems.length - 1]?.textContent
@@ -103,7 +103,7 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
       const priceStr = product.querySelector('.normal-price .price')?.textContent;
       const price = priceWithCurrencyToNumber(priceStr);
       const oldPrice = product.querySelector('.old-price .price-wrapper')?.textContent;
-      const imageUrl = (product.querySelector('.price-box .product-image-photo') as HTMLElement)?.getAttribute('src');
+      const imageUrl = (product.querySelector('.product-image-photo') as HTMLElement)?.getAttribute('src');
       if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
         const [manufacturer, productName] = split(manufacturerAndProductName.replace('Climbing Shoe', '').trim());
         products.push({

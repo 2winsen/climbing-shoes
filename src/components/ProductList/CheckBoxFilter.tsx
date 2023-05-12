@@ -1,8 +1,12 @@
 import { IDoesFilterPassParams, IFilterParams } from 'ag-grid-community';
-import { uniq } from 'lodash-es';
+import { snakeCase, uniq } from 'lodash-es';
 import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Product } from '../../types';
 import styles from './CheckBoxFilter.module.scss';
+
+function toFilterValue(value: any) {
+  return snakeCase(value.toString().toLowerCase());
+}
 
 export const CheckBoxFilter = forwardRef(function CheckBoxFilter(props: IFilterParams<Product>, ref) {
   const [filter, setFilter] = useState<Record<string, boolean>>({});
@@ -30,7 +34,7 @@ export const CheckBoxFilter = forwardRef(function CheckBoxFilter(props: IFilterP
           return true;
         }
 
-        return filter[value.toString().toLowerCase()];
+        return filter[toFilterValue(value)];
       },
 
       isFilterActive() {
@@ -68,7 +72,7 @@ export const CheckBoxFilter = forwardRef(function CheckBoxFilter(props: IFilterP
   );
 
   const changeHandler = (value: string) => (event: ChangeEvent<HTMLInputElement>) => {
-    setFilter((filter) => ({ ...filter, [value.toLowerCase()]: Boolean(event.target.checked) }));
+    setFilter((filter) => ({ ...filter, [toFilterValue(value)]: Boolean(event.target.checked) }));
   };
 
   useEffect(() => {
@@ -81,7 +85,7 @@ export const CheckBoxFilter = forwardRef(function CheckBoxFilter(props: IFilterP
       {uniqColumnValues.map((value) => (
         <div key={value} className={styles.checkboxItem}>
           <label>
-            <input type="checkbox" checked={filter[value] ?? false} onChange={changeHandler(value)} />
+            <input type="checkbox" checked={filter[toFilterValue(value)] ?? false} onChange={changeHandler(value)} />
             <span>{value}</span>
           </label>
         </div>
