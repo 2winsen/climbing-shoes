@@ -4,6 +4,7 @@ import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } fro
 import { Product } from '../../types';
 import styles from './CheckBoxFilter.module.scss';
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 function toFilterValue(value: any) {
   return snakeCase(value.toString().toLowerCase());
 }

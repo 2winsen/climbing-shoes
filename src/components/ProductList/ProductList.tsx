@@ -117,7 +117,7 @@ export function ProductList({ products }: Props) {
 
   return (
     <div className={styles.productList}>
-      {!isDesktop ? <div className={styles.howToFilter}>**Tap and hold on column name to filter.</div> : null}
+      {!isDesktop ? <div className={styles.howToFilter}>**Tap and hold on header to filter.</div> : null}
       <div style={containerStyle}>
         <div className="ag-theme-alpine" style={gridStyle}>
           <AgGridReact

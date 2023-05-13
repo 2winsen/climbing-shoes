@@ -1,11 +1,10 @@
 import { IDoesFilterPassParams, IFilterParams } from 'ag-grid-community';
-import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import ReactSlider from 'react-slider';
 import { Product } from '../../types';
 import styles from './NumberFilter.module.scss';
 
 export const NumberFilter = forwardRef(function NumberFilter(props: IFilterParams<Product>, ref) {
-  const [priceFilterValue, setPriceFilterValue] = useState<number>(0);
-
   useImperativeHandle(ref, () => {
     return {
       doesFilterPass(params: IDoesFilterPassParams) {
@@ -23,14 +22,16 @@ export const NumberFilter = forwardRef(function NumberFilter(props: IFilterParam
           node,
         });
 
-        if (priceFilterValue != 0 && value > priceFilterValue) {
-          return false;
+        const [filterValue1, filterValue2] = priceFilterValue;
+        if (value >= filterValue1 && value <= filterValue2) {
+          return true;
         }
-        return true;
+        return false;
       },
 
       isFilterActive() {
-        return priceFilterValue >= priceMinStep && priceFilterValue < priceMaxStep;
+        const [value1, value2] = priceFilterValue;
+        return value1 > priceMinStep || value2 < priceMaxStep;
       },
 
       getModel() {
@@ -56,15 +57,19 @@ export const NumberFilter = forwardRef(function NumberFilter(props: IFilterParam
 
   const prices = getAllRows().map((x) => x.price);
 
-  const step = 10;
+  const step = 1;
   const priceMax = Math.max(...prices);
+  // Max value in regard to step to be integer
   const priceMaxStep = priceMax + (step - (priceMax % step));
 
   const priceMin = Math.min(...prices);
+  // Min value in regard to step to be integer
   const priceMinStep = priceMin + (step - (priceMin % step));
 
-  const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setPriceFilterValue(Number(event.target.value));
+  const [priceFilterValue, setPriceFilterValue] = useState<[number, number]>([0, priceMax]);
+
+  const changeHandler = ([value1, value2]: number[]) => {
+    setPriceFilterValue([value1, value2]);
   };
 
   useEffect(() => {
@@ -74,16 +79,25 @@ export const NumberFilter = forwardRef(function NumberFilter(props: IFilterParam
 
   return (
     <div className={styles.container}>
-      <div>Max price:</div>
-      <input
-        type="range"
+      <ReactSlider
+        className={styles.horizontalSlider}
+        thumbClassName={styles.horizontalSliderThumb}
+        trackClassName={styles.horizontalSliderTrack}
+        defaultValue={[priceMinStep, priceMaxStep]}
         min={priceMinStep}
         max={priceMaxStep}
-        value={priceFilterValue}
-        step={step}
+        ariaLabel={['Lower thumb', 'Upper thumb']}
+        ariaValuetext={(state) => `Thumb value ${state.valueNow}`}
+        renderThumb={(props, state) => (
+          <div {...props}>
+            <div className={styles.horizontalSliderValue}>{state.valueNow}</div>
+          </div>
+        )}
+        pearling
+        minDistance={10}
         onChange={changeHandler}
+        value={priceFilterValue}
       />
-      <span>{priceFilterValue}€</span>
     </div>
   );
 });

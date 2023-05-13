@@ -2,5 +2,67 @@
   font-size: 1.2em;
   display: flex;
   flex-direction: column;
-  padding: 0.6em;
+  padding: 1.5em 0.8em 0.5em 0.8em;
+}
+
+.horizontalSlider {
+  width: 10em;
+  height: 3em;
+  margin: 0 0.5em;
+
+  .horizontalSliderTrack {
+    top: 22px;
+    height: 4px;
+  }
+
+  .horizontalSliderThumb {
+    top: 12px;
+    width: 10px;
+    outline: none;
+    height: 10px;
+    line-height: 38px;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.horizontalSliderThumb {
+  cursor: pointer;
+  position: absolute;
+  z-index: 100;
+  background: #3774ff;
+  border: 7px solid #3774ff;
+  border-radius: 100%;
+  display: block;
+  box-shadow: 0 0 2px 0 rgb(0 0 0 / 44%);
+
+  &.active {
+    background-color: grey;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .horizontalSliderThumb {
+    border-width: 5px;
+  }
+  .horizontalSlider .horizontalSliderTrack {
+    top: 20px;
+  }
+}
+
+.horizontalSliderTrack {
+  position: relative;
+  background: #ddd;
+
+  &.horizontal-slider-track-0 {
+    background: #83a9ff;
+  }
+}
+
+.horizontalSliderValue {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  top: -2.5em;
 }
