@@ -1,6 +1,7 @@
-import startCase from 'lodash-es/startCase';
+import startCase from 'lodash/startCase';
 import { useEffect, useState } from 'react';
 import { MAX_WAIT, USE_MOCKS } from './conf';
+import responseBergfreunde from './mocks/mock-bergfreunde.html?raw';
 import responseEpicTv from './mocks/mock-epictv.html?raw';
 import responseOliunid from './mocks/mock-oliunid.html?raw';
 import responseVirsotne from './mocks/mock-virsotne.json';
@@ -14,10 +15,11 @@ export function fetchMock(url: string): Promise<Response> {
     timeout = 500;
   } else if (url.includes('oliunid')) {
     response = responseOliunid;
-    // timeout = 1000;
-  } else {
+    timeout = 1000;
+  } else if (url.includes('epictv')) {
     response = responseEpicTv;
-    // timeout = 1500;
+  } else if (url.includes('bergfreunde')) {
+    response = responseBergfreunde;
   }
   return new Promise((res) => {
     setTimeout(() => {
@@ -95,5 +97,12 @@ export function htmlToElement(html: string) {
 export const ANY_SIZE = 'any';
 
 export function priceWithCurrencyToNumber(price: string | undefined | null) {
-  return price != null ? parseFloat(String(price).slice(1)) : undefined;
+  if (price == null) {
+    return undefined;
+  }
+  const withoutCurrency = String(price)
+    .replaceAll(/[a-zA-Z ]/g, '')
+    .replaceAll(',', '.')
+    .slice(1);
+  return parseFloat(withoutCurrency);
 }

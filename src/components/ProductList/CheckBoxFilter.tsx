@@ -1,5 +1,6 @@
 import { IDoesFilterPassParams, IFilterParams } from 'ag-grid-community';
-import { snakeCase, uniq } from 'lodash-es';
+import snakeCase from 'lodash/snakeCase';
+import uniq from 'lodash/uniq';
 import { ChangeEvent, forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Product } from '../../types';
 import styles from './CheckBoxFilter.module.scss';

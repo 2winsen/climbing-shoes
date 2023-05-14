@@ -1,8 +1,9 @@
-import { flatten } from 'lodash-es';
+import flatten from 'lodash/flatten';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Loading } from '../components/Loading/Loading';
 import { ProductList } from '../components/ProductList/ProductList';
+import { createFetchBergfreunde } from '../services/fetchBergfreunde';
 import { createFetchEpicTv } from '../services/fetchEpicTv';
 import { createFetchOliunid } from '../services/fetchOliunid';
 import { createFetchVirsotne } from '../services/fetchVirsotne';
@@ -21,7 +22,8 @@ function Search() {
   const queryVirsotne = useFetch('virsotne.lv', fetchSearchParams, createFetchVirsotne);
   const queryEpicTv = useFetch('epictv.com', fetchSearchParams, createFetchEpicTv);
   const queryOliunid = useFetch('oliunid.com', fetchSearchParams, createFetchOliunid);
-  const all = [queryVirsotne, queryEpicTv, queryOliunid];
+  const queryBergfreunde = useFetch('bergfreunde.eu', fetchSearchParams, createFetchBergfreunde);
+  const all = [queryVirsotne, queryEpicTv, queryOliunid, queryBergfreunde];
 
   const ready = all.every(([data, error]) => data || error);
   const readyTimeout = useTimeout(ready, 800);
