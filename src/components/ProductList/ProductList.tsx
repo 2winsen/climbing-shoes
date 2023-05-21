@@ -84,6 +84,7 @@ export function ProductList({ products }: Props) {
       sortable: true,
       filter: true,
       resizable: true,
+      suppressMovable: true,
     }),
     []
   );
