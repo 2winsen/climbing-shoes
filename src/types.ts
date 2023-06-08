@@ -21,3 +21,14 @@ export type CreateFetchSinglePage = (
 ) => (page: number) => Promise<{ products: Product[]; totalPagesCount: number }>;
 
 export type Orientation = 'landscape' | 'portrait';
+
+export interface Service {
+  name: string;
+  fetchHandler: CreateFetchSinglePage;
+  active: boolean;
+}
+
+export interface Device {
+  isDesktop: boolean;
+  orientation: Orientation;
+}

@@ -3,39 +3,37 @@ import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Loading } from '../components/Loading/Loading';
 import { ProductList } from '../components/ProductList/ProductList';
-import { createFetchBergfreunde } from '../services/fetchBergfreunde';
-import { createFetchEpicTv } from '../services/fetchEpicTv';
-import { createFetchOliunid } from '../services/fetchOliunid';
-import { createFetchVirsotne } from '../services/fetchVirsotne';
 import { useFetch } from '../services/useFetch';
-import { Product } from '../types';
+import { Product, Service } from '../types';
 import { ANY_SIZE, useTimeout } from '../utils';
 import styles from './Search.module.scss';
 
-function Search() {
+interface Props {
+  availableServices: Service[];
+}
+
+function Search({ availableServices }: Props) {
   const [searchParams] = useSearchParams();
   const sizeParam = searchParams.get('size');
   const size = sizeParam === ANY_SIZE || sizeParam == null ? undefined : sizeParam;
 
   const fetchSearchParams = useMemo(() => ({ size }), [size]);
 
-  const queryVirsotne = useFetch('virsotne.lv', fetchSearchParams, createFetchVirsotne);
-  const queryEpicTv = useFetch('epictv.com', fetchSearchParams, createFetchEpicTv);
-  const queryOliunid = useFetch('oliunid.com', fetchSearchParams, createFetchOliunid);
-  const queryBergfreunde = useFetch('bergfreunde.eu', fetchSearchParams, createFetchBergfreunde);
-  const all = [queryVirsotne, queryEpicTv, queryOliunid, queryBergfreunde];
-
-  const ready = all.every(([data, error]) => data || error);
+  const serviceResults = availableServices
+    .filter((s) => s.active)
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    .map((s) => useFetch(s.name, fetchSearchParams, s.fetchHandler));
+  const ready = serviceResults.every(([data, error]) => data || error);
   const readyTimeout = useTimeout(ready, 800);
 
   if (!readyTimeout) {
     return (
       <div className={styles.loadingWrapper}>
-        <Loading items={all} />
+        <Loading items={serviceResults} />
       </div>
     );
   }
-  const products = flatten(all.filter(([data]) => data).map(([data]) => data as Product[]));
+  const products = flatten(serviceResults.filter(([data]) => data).map(([data]) => data as Product[]));
   return (
     <div className={styles.searchWrapper}>
       <ProductList products={products} />

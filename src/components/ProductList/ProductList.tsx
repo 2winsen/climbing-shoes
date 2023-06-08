@@ -26,7 +26,7 @@ function sellerUrlValueGetter(params: ValueGetterParams<Product>) {
 const wrapTextCellStyle = { whiteSpace: 'normal', lineHeight: 1.8, paddingTop: '0.4em' };
 
 export function ProductList({ products }: Props) {
-  const isDesktop = useContext(DeviceContext);
+  const { isDesktop } = useContext(DeviceContext);
   const gridRef = useRef<AgGridReact<Product>>(null);
 
   const columnDefs = useMemo<(ColDef | ColGroupDef)[]>(
@@ -126,7 +126,6 @@ export function ProductList({ products }: Props) {
             rowData={products}
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
-            animateRows={true}
             onFirstDataRendered={onFirstDataRendered}
             rowHeight={100}
             enableCellTextSelection

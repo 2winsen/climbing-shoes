@@ -21,6 +21,10 @@
     width: 8em;
     margin-bottom: 0.5em;
   }
+
+  .mobileLandscape & {
+    font-size: 0.7em;
+  }
 }
 
 button {
@@ -29,4 +33,28 @@ button {
   padding: 1em 3em;
   line-height: 1;
   width: 8em;
+}
+
+.servicesSelector {
+  display: flex;
+  flex-direction: column;
+}
+
+@media only screen and (min-width: 600px) {
+  .servicesSelector {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.heading {
+  display: block;
+  font-size: 1.5em;
+  margin: 0.83em 0;
+  font-weight: bold;
+
+  .mobileLandscape & {
+    font-size: 1.3em;
+    margin: 0.23em 0;
+  }
 }

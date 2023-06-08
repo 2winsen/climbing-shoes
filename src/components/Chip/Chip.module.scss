@@ -1,0 +1,14 @@
+@use '../../variables' as v;
+
+.chip {
+  border: 1px solid #555;
+  border-radius: 1em;
+  cursor: pointer;
+  min-width: 8em;
+  padding: 0.35em;
+  margin: 0.2em;
+
+  &.selected {
+    background-color: v.$accentColor;
+  }
+}

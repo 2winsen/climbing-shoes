@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "dev:host": "vite --host",
     "build": "tsc && vite build && copy dist\\index.html dist\\200.html",
-    "surge:deploy": "surge dist/ --domain find-cheap-climbing-shoes.surge.sh",
+    "surge:deploy": "test && surge dist/ --domain find-cheap-climbing-shoes.surge.sh",
     "preview": "vite preview",
     "lint": "eslint ./src",
     "test": "jest"
@@ -15,6 +16,7 @@
     "@types/lodash": "^4.14.194",
     "ag-grid-community": "^29.1.0",
     "ag-grid-react": "^29.1.0",
+    "classnames": "^2.3.2",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -2,6 +2,11 @@
 
 http://find-cheap-climbing-shoes.surge.sh/
 
+### Run locally
+
+- pnpm dev
+- pnpm dev:host - with exposure in local network
+
 ### Nice to have
 
 - add rating from https://www.outdoorgearlab.com/reviews/climbing
