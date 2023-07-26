@@ -125,22 +125,25 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
     }
     // Since EPIC TV has weird thing that filtered sizes in list mode are actually out of stock we have to check each shoe independently :(
     const sizeCode = sizeMap[searchParams.size];
-    const everyPagePromise = products.map((p) => p.sellerUrl).map((url) => fetchWrapper(withCorsProxy(url.toString())));
+    const everyPageUrl = products.map((p) => p.sellerUrl).map((url) => withCorsProxy(url.toString()));
+    const everyPagePromise = everyPageUrl.map(fetchWrapper);
     const productsPagesResponses = await Promise.all(everyPagePromise);
     const productsPagesTexts = await Promise.all(productsPagesResponses.map((r) => r.text()));
     const indicesWithoutSizeInStock: number[] = [];
     for (let idx = 0; idx < productsPagesTexts.length; idx++) {
       const pageText = productsPagesTexts[idx];
-      const sliceStartTerm = '<body';
-      const sliceStartIdx = responseText.indexOf(sliceStartTerm);
-      const sliceEndTerm = '</body>';
-      const sliceEndIdx = responseText.indexOf(sliceEndTerm);
-      const body = pageText.substring(sliceStartIdx, sliceEndIdx + sliceEndTerm.length);
-      const el = htmlToElement(body);
+      const el = htmlToElement(pageText);
       const stockSizesScriptTagContents = el.querySelector(
         '.product-add-form .fieldset script[type="text/x-magento-init"]'
       ) as any;
-      const stockSizesJson = JSON.parse(stockSizesScriptTagContents.text);
+      let stockSizesJson;
+      try {
+        stockSizesJson = JSON.parse(stockSizesScriptTagContents.text);
+      } catch (e) {
+        console.error(e);
+        console.log(`${name}: Unable to parse available sizes for ${products[idx].sellerUrl}`);
+        continue;
+      }
       const spConfig = stockSizesJson['#product_addtocart_form']['configurable']['spConfig'];
       const productAttribute = spConfig['attributes']['655']['options'].find((x: any) => x.id === sizeCode.paramValue);
       const productAttributeCode = productAttribute['products'][0];
