@@ -1,12 +1,12 @@
 {
   "name": "climbing-shoes",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
     "dev:host": "vite --host",
     "build": "tsc && vite build && copy dist\\index.html dist\\200.html",
-    "surge:deploy": "jest && surge dist/ --domain find-cheap-climbing-shoes.surge.sh",
+    "surge:deploy": "npm version patch && jest && surge dist/ --domain find-cheap-climbing-shoes.surge.sh",
     "preview": "vite preview",
     "lint": "eslint ./src",
     "test": "jest"
