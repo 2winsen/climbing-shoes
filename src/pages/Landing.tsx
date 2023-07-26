@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { ChangeEvent, useContext, useState } from 'react';
+import { ChangeEvent, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DeviceContext } from '../DeviceContext';
 import { Chip } from '../components/Chip/Chip';
@@ -10,12 +10,14 @@ import styles from './Landing.module.scss';
 interface Props {
   availableServices: Service[];
   onAvailableServiceChange: (updated: Service[]) => void;
+  size: string;
+  onSizeChange: (size: string) => void;
 }
 
-function Landing({ availableServices, onAvailableServiceChange }: Props) {
+function Landing({ availableServices, onAvailableServiceChange, size, onSizeChange }: Props) {
   const { isDesktop, orientation } = useContext(DeviceContext);
   const isMobileLandScape = !isDesktop && orientation === 'landscape';
-  const [size, setSize] = useState<string>(ANY_SIZE);
+
   const navigate = useNavigate();
 
   function handleFind() {
@@ -24,7 +26,7 @@ function Landing({ availableServices, onAvailableServiceChange }: Props) {
 
   function handleSizeChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value.trim();
-    setSize(value === '' ? ANY_SIZE : value);
+    onSizeChange(value === '' ? ANY_SIZE : value);
   }
 
   function handleServiceChange(name: string) {
@@ -50,7 +52,7 @@ function Landing({ availableServices, onAvailableServiceChange }: Props) {
       </div>
       <div className={styles.heading}>Find cheap climbing shoes</div>
       <form className={styles.form} onSubmit={handleFind}>
-        <input type="text" placeholder="size (eu)" onChange={handleSizeChange} />
+        <input type="text" placeholder="size (eu)" onChange={handleSizeChange} value={size === ANY_SIZE ? '' : size} />
         <button onClick={handleFind}>Find</button>
       </form>
     </div>
