@@ -8,12 +8,20 @@ import {
   withCorsProxy,
 } from '../utils';
 
+function formatSize(size: string) {
+  const isDecimal = parseFloat(size) % 1 !== 0;
+  if (isDecimal) {
+    return `${parseInt(size)}c5`;
+  }
+  return size;
+}
+
 export function createFetchBergfreunde(name: string, searchParams: SearchParams) {
   return async function (pageNumber: number) {
     const products: Product[] = [];
     let urlString = 'https://www.bergfreunde.eu/climbing-shoes/';
     if (searchParams.size) {
-      urlString += `size--${searchParams.size}/`;
+      urlString += `size--${formatSize(searchParams.size)}/`;
     }
     if (pageNumber > 1) {
       urlString += `${pageNumber}/`;

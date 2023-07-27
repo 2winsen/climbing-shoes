@@ -17,17 +17,27 @@ function split(manufacturerAndProductName: string) {
   return [manufacturer ?? manufacturerAndProductName, productName ?? manufacturerAndProductName];
 }
 
+function formatSize(size: string) {
+  const isDecimal = parseFloat(size) % 1 !== 0;
+  if (isDecimal) {
+    return `${parseInt(size)}+½`;
+  }
+  return size;
+}
+
 export function createFetchOliunid(name: string, searchParams: SearchParams) {
   return async function (pageNumber: number) {
     const products: Product[] = [];
     const url = new URL('https://www.oliunid.com/eu/footwear/climbing-shoes.html');
     if (searchParams.size) {
-      url.searchParams.set('amshopby[taglia_scapette][]', searchParams.size);
+      url.searchParams.set('taglia_scapette', formatSize(searchParams.size));
     }
     if (pageNumber > 1) {
       url.searchParams.set('p', pageNumber.toString());
     }
-    const response = await fetchWrapper(withCorsProxy(url.toString()));
+    // Small hack: oliunid returns nothing is we use %2B
+    const urlPlusSign = url.toString().replace('%2B', '+');
+    const response = await fetchWrapper(withCorsProxy(urlPlusSign));
     const responseText = await response.text();
     const body1Idx = responseText.indexOf('<body');
     const body2Term = '</body>';
