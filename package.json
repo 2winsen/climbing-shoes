@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "vite",
     "dev:host": "vite --host",
-    "build": "tsc && vite build && copy dist\\index.html dist\\200.html",
-    "surge:deploy": "npm version patch && jest && surge dist/ --domain find-cheap-climbing-shoes.surge.sh",
+    "build": "jest && tsc && npm version patch && vite build && copy dist\\index.html dist\\200.html",
+    "surge:deploy": "surge dist/ --domain find-cheap-climbing-shoes.surge.sh",
     "preview": "vite preview",
     "lint": "eslint ./src",
     "test": "jest"
