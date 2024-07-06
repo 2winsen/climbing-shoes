@@ -7,6 +7,10 @@ http://find-cheap-climbing-shoes.surge.sh/
 - pnpm dev
 - pnpm dev:host - with exposure in local network
 
+### Stuff
+
+- `src/utils.ts` contains proxy url
+
 ### Nice to have
 
 - add rating from https://www.outdoorgearlab.com/reviews/climbing

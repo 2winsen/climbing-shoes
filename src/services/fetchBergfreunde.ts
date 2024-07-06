@@ -5,7 +5,7 @@ import {
   priceWithCurrencyToNumber,
   removeWww,
   startCaseLowerCase,
-  withCorsProxy,
+  withProxy,
 } from '../utils';
 
 function formatSize(size: string) {
@@ -27,7 +27,7 @@ export function createFetchBergfreunde(name: string, searchParams: SearchParams)
       urlString += `${pageNumber}/`;
     }
     const url = new URL(urlString);
-    const response = await fetchWrapper(withCorsProxy(url.toString()));
+    const response = await fetchWrapper(withProxy(url.toString()));
     const responseText = await response.text();
     const body1Idx = responseText.indexOf('<body');
     const body2Term = '</body>';

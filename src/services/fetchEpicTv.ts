@@ -7,7 +7,7 @@ import {
   priceWithCurrencyToNumber,
   removeWww,
   startCaseLowerCase,
-  withCorsProxy,
+  withProxy,
 } from '../utils';
 
 function split(manufacturerAndProductName: string) {
@@ -82,7 +82,7 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
     if (pageNumber > 1) {
       url.searchParams.set('p', pageNumber.toString());
     }
-    const response = await fetchWrapper(withCorsProxy(url.toString()));
+    const response = await fetchWrapper(withProxy(url.toString()));
     const responseText = await response.text();
     const sliceStartTerm = '<body';
     const sliceStartIdx = responseText.indexOf(sliceStartTerm);
@@ -125,7 +125,7 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
     }
     // Since EPIC TV has weird thing that filtered sizes in list mode are actually out of stock we have to check each shoe independently :(
     const sizeCode = sizeMap[searchParams.size];
-    const everyPageUrl = products.map((p) => p.sellerUrl).map((url) => withCorsProxy(url.toString()));
+    const everyPageUrl = products.map((p) => p.sellerUrl).map((url) => withProxy(url.toString()));
     const everyPagePromise = everyPageUrl.map(fetchWrapper);
     const productsPagesResponses = await Promise.all(everyPagePromise);
     const productsPagesTexts = await Promise.all(productsPagesResponses.map((r) => r.text()));

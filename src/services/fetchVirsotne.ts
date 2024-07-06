@@ -1,5 +1,5 @@
 import { Product, SearchParams } from '../types';
-import { fetchWrapper, removeWww, startCaseLowerCase, withCorsProxy } from '../utils';
+import { fetchWrapper, removeWww, startCaseLowerCase, withProxy } from '../utils';
 
 const sizeMap: Record<string, { paramName: string; paramValue: string }> = {
   '26': { paramName: 'layered_id_attribute_group_5493', paramValue: '5493_9' },
@@ -104,7 +104,7 @@ export function createFetchVirsotne(name: string, searchParams: SearchParams) {
       url.searchParams.set(sizeMapParamValue.paramName, sizeMapParamValue.paramValue);
     }
     url.searchParams.set('p', pageNumber.toString());
-    const response = await fetchWrapper(withCorsProxy(url.toString()));
+    const response = await fetchWrapper(withProxy(url.toString()));
     const responseJson = await response.json();
     const { productList, nbAskedProducts, nbRenderedProducts } = responseJson;
     const totalPagesCount = Math.ceil(+nbRenderedProducts / +nbAskedProducts);

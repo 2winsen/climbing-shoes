@@ -6,7 +6,7 @@ import {
   priceWithCurrencyToNumber,
   removeWww,
   startCaseLowerCase,
-  withCorsProxy,
+  withProxy,
 } from '../utils';
 
 function split(manufacturerAndProductName: string) {
@@ -37,7 +37,7 @@ export function createFetchOliunid(name: string, searchParams: SearchParams) {
     }
     // Small hack: oliunid returns nothing is we use %2B
     const urlPlusSign = url.toString().replace('%2B', '+');
-    const response = await fetchWrapper(withCorsProxy(urlPlusSign));
+    const response = await fetchWrapper(withProxy(urlPlusSign));
     const responseText = await response.text();
     const body1Idx = responseText.indexOf('<body');
     const body2Term = '</body>';

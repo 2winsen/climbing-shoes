@@ -80,11 +80,8 @@ export function fetchWrapper(url: string) {
   });
 }
 
-/**
- * https://corsproxy.io/
- */
-export function withCorsProxy(url: string) {
-  return 'https://corsproxy.io/?' + encodeURIComponent(url);
+export function withProxy(url: string) {
+  return 'http://*REMOVED*:8080/' + url;
 }
 
 export function htmlToElement(html: string) {
