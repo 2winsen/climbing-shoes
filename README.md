@@ -10,6 +10,7 @@ http://find-cheap-climbing-shoes.surge.sh/
 ### Stuff
 
 - `src/utils.ts` contains proxy url
+- version is visible in dev console
 
 ### Nice to have
 
@@ -19,7 +20,6 @@ http://find-cheap-climbing-shoes.surge.sh/
 - add bananafingers data - GBP?
 - add gandrs data?
 - storybook (screenshot tests)
-- text filter (for product name)
 
 ## How to use mocks:
 
@@ -33,5 +33,6 @@ http://find-cheap-climbing-shoes.surge.sh/
 
 ## How to deploy:
 
+- pnpm version patch
 - pnpm build
 - pnpm surge:deploy

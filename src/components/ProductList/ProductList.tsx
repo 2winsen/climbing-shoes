@@ -57,7 +57,7 @@ export function ProductList({ products }: Props) {
       },
       {
         field: 'productName',
-        headerName: 'Product',
+        headerName: 'Model',
         tooltipField: 'productName',
         autoHeight: true,
         minWidth: 120,

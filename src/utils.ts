@@ -1,10 +1,11 @@
 import startCase from 'lodash/startCase';
 import { useEffect, useState } from 'react';
-import { MAX_WAIT, USE_MOCKS } from './conf';
+import { CORS_PROXY_URL, MAX_WAIT, USE_MOCKS } from './conf';
 import responseBergfreunde from './mocks/mock-bergfreunde.html?raw';
 import responseEpicTv from './mocks/mock-epictv.html?raw';
 import responseOliunid from './mocks/mock-oliunid.html?raw';
 import responseVirsotne from './mocks/mock-virsotne.json';
+import { SearchParams } from './types';
 
 export function fetchMock(url: string): Promise<Response> {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -81,7 +82,7 @@ export function fetchWrapper(url: string) {
 }
 
 export function withProxy(url: string) {
-  return 'http://*REMOVED*:8080/' + url;
+  return `${CORS_PROXY_URL}/${url}`;
 }
 
 export function htmlToElement(html: string) {
@@ -91,7 +92,7 @@ export function htmlToElement(html: string) {
   return template.content;
 }
 
-export const ANY_SIZE = 'any';
+export const ANYTHING = 'any';
 
 export function priceWithCurrencyToNumber(price: string | undefined | null) {
   if (price == null) {
@@ -102,4 +103,23 @@ export function priceWithCurrencyToNumber(price: string | undefined | null) {
     .replaceAll(',', '.')
     .slice(1);
   return parseFloat(withoutCurrency);
+}
+
+export function parseSearchQueryParam(searchQueryParam: string | null): SearchParams {
+  const searchQuery = searchQueryParam === ANYTHING || searchQueryParam == null ? undefined : searchQueryParam.trim();
+  const searchParams: SearchParams = {};
+  if (searchQuery) {
+    const numberPattern = '(\\d+(?:\\.\\d+)?)';
+    const sizePattern = new RegExp(`^${numberPattern}\\s|\\s${numberPattern}$|^${numberPattern}$`, 'i');
+
+    const sizeMatch = searchQuery.match(sizePattern);
+    const size = sizeMatch ? sizeMatch[0].trim() : undefined;
+    const model = size ? searchQuery.replace(size, '').trim() : searchQuery;
+
+    return {
+      size,
+      model: model || undefined,
+    };
+  }
+  return searchParams;
 }

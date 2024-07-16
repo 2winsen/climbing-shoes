@@ -4,8 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 import { Loading } from '../components/Loading/Loading';
 import { ProductList } from '../components/ProductList/ProductList';
 import { useFetch } from '../services/useFetch';
-import { Product, Service } from '../types';
-import { ANY_SIZE, useTimeout } from '../utils';
+import { Product, SearchParams, Service } from '../types';
+import { parseSearchQueryParam, useTimeout } from '../utils';
 import styles from './Search.module.scss';
 
 interface Props {
@@ -14,15 +14,13 @@ interface Props {
 
 function Search({ availableServices }: Props) {
   const [searchParams] = useSearchParams();
-  const sizeParam = searchParams.get('size');
-  const size = sizeParam === ANY_SIZE || sizeParam == null ? undefined : sizeParam;
-
-  const fetchSearchParams = useMemo(() => ({ size }), [size]);
+  const searchQueryParam = searchParams.get('q');
+  const memoizedParams: SearchParams = useMemo(() => parseSearchQueryParam(searchQueryParam), [searchQueryParam]);
 
   const serviceResults = availableServices
     .filter((s) => s.active)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    .map((s) => useFetch(s.name, fetchSearchParams, s.fetchHandler));
+    .map((s) => useFetch(s.name, memoizedParams, s.fetchHandler));
   const ready = serviceResults.every(([data, error]) => data || error);
   const readyTimeout = useTimeout(ready, 800);
 

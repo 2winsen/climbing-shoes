@@ -4,29 +4,29 @@ import { useNavigate } from 'react-router-dom';
 import { DeviceContext } from '../DeviceContext';
 import { Chip } from '../components/Chip/Chip';
 import { Service } from '../types';
-import { ANY_SIZE } from '../utils';
+import { ANYTHING } from '../utils';
 import styles from './Landing.module.scss';
 
 interface Props {
   availableServices: Service[];
   onAvailableServiceChange: (updated: Service[]) => void;
-  size: string;
-  onSizeChange: (size: string) => void;
+  searchQuery: string;
+  onSearchQueryChange: (query: string) => void;
 }
 
-function Landing({ availableServices, onAvailableServiceChange, size, onSizeChange }: Props) {
+function Landing({ availableServices, onAvailableServiceChange, searchQuery, onSearchQueryChange }: Props) {
   const { isDesktop, orientation } = useContext(DeviceContext);
   const isMobileLandScape = !isDesktop && orientation === 'landscape';
 
   const navigate = useNavigate();
 
   function handleFind() {
-    navigate({ pathname: '/search', search: `?size=${size}` });
+    navigate({ pathname: '/search', search: `?q=${searchQuery}` });
   }
 
-  function handleSizeChange(e: ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value.trim();
-    onSizeChange(value === '' ? ANY_SIZE : value);
+  function handleSearchQueryChange(e: ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    onSearchQueryChange(value === '' ? ANYTHING : value);
   }
 
   function handleServiceChange(name: string) {
@@ -50,10 +50,22 @@ function Landing({ availableServices, onAvailableServiceChange, size, onSizeChan
           <Chip key={s.name} name={s.name} selected={s.active} onChange={handleServiceChange} />
         ))}
       </div>
-      <div className={styles.heading}>Find cheap climbing shoes</div>
       <form className={styles.form} onSubmit={handleFind}>
-        <input type="text" placeholder="size (eu)" onChange={handleSizeChange} value={size === ANY_SIZE ? '' : size} />
-        <button onClick={handleFind}>Find</button>
+        <input
+          type="search"
+          placeholder="🧗‍♂️ Search for your next shoes"
+          onChange={handleSearchQueryChange}
+          value={searchQuery === ANYTHING ? '' : searchQuery}
+        />
+        <a
+          className={styles.referLink}
+          href="https://www.digitalocean.com/?refcode=94d4e01d1f0a&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"
+        >
+          <img
+            src="https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%202.svg"
+            alt="DigitalOcean Referral Badge"
+          />
+        </a>
       </form>
     </div>
   );

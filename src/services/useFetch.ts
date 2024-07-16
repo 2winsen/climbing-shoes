@@ -2,6 +2,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { VERBOSE_LOGGING } from '../conf';
 import { CreateFetchSinglePage, Product, QueryResult, SearchParams } from '../types';
 
+function filterByModel(model: string | undefined) {
+  return (product: Product) => {
+    if (model) {
+      return `${product.manufacturer} ${product.productName}`.toUpperCase().includes(model.toUpperCase());
+    }
+    return true;
+  };
+}
+
 export function useFetch(
   name: string,
   searchParams: SearchParams,
@@ -41,13 +50,13 @@ export function useFetch(
         if (VERBOSE_LOGGING) {
           console.log(`${name}: ${products.length}`);
         }
-        setData(products);
+        setData(products.filter(filterByModel(searchParams.model)));
       })
       .catch((error) => {
         console.error(error);
         setError(error);
       });
-  }, [fetchSinglePage, name]);
+  }, [fetchSinglePage, name, searchParams.model]);
 
   return [data, error, name];
 }

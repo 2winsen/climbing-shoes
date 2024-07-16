@@ -1,4 +1,5 @@
-import { priceWithCurrencyToNumber, startCaseLowerCase } from './utils';
+import { CORS_PROXY_URL } from './conf';
+import { parseSearchQueryParam, priceWithCurrencyToNumber, startCaseLowerCase, withProxy } from './utils';
 
 describe('priceWithCurrencyToNumber', () => {
   test('format', () => {
@@ -38,5 +39,71 @@ describe('startCaseLowerCase', () => {
 
   test('with uppercase', () => {
     expect(startCaseLowerCase('LA sporTIVA')).toBe('La Sportiva');
+  });
+});
+
+describe('parseSearchQueryParam', () => {
+  test('empty', () => {
+    expect(parseSearchQueryParam('')).toEqual({});
+  });
+
+  test('size', () => {
+    expect(parseSearchQueryParam('45')).toEqual({
+      size: '45',
+    });
+  });
+
+  test('model', () => {
+    expect(parseSearchQueryParam('la sportiva')).toEqual({
+      model: 'la sportiva',
+    });
+  });
+
+  test('model and size', () => {
+    expect(parseSearchQueryParam('miura 45')).toEqual({
+      model: 'miura',
+      size: '45',
+    });
+  });
+
+  test('size and model', () => {
+    expect(parseSearchQueryParam('44.5 miura')).toEqual({
+      model: 'miura',
+      size: '44.5',
+    });
+  });
+
+  test('inconsistent spacing', () => {
+    expect(parseSearchQueryParam(' miura   45  ')).toEqual({
+      model: 'miura',
+      size: '45',
+    });
+  });
+
+  test('5-10 size', () => {
+    expect(parseSearchQueryParam('5-10 45')).toEqual({
+      model: '5-10',
+      size: '45',
+    });
+  });
+
+  test('size 5-10', () => {
+    expect(parseSearchQueryParam('45 5-10')).toEqual({
+      model: '5-10',
+      size: '45',
+    });
+  });
+
+  test('la sportiva', () => {
+    expect(parseSearchQueryParam('la sportiva miura 45')).toEqual({
+      model: 'la sportiva miura',
+      size: '45',
+    });
+  });
+});
+
+describe('withProxy', () => {
+  test('CORS_PROXY_URL', () => {
+    expect(withProxy('https://foo.bar')).toBe(`${CORS_PROXY_URL}/https://foo.bar`);
   });
 });

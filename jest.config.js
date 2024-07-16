@@ -5,7 +5,7 @@ module.exports = {
   transform: {
     '\\.tsx?$': 'ts-jest',
   },
-  moduleNameMapper:{
-    '\\.(html\\?raw)$': '<rootDir>/__mocks__/fileMock.js'
-}
+  moduleNameMapper: {
+    '\\.(html\\?raw)$': '<rootDir>/__mocks__/fileMock.js',
+  },
 };

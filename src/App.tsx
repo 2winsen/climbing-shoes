@@ -12,7 +12,7 @@ import { createFetchEpicTv } from './services/fetchEpicTv';
 import { createFetchOliunid } from './services/fetchOliunid';
 import { createFetchVirsotne } from './services/fetchVirsotne';
 import { Device, Service } from './types';
-import { ANY_SIZE } from './utils';
+import { ANYTHING } from './utils';
 
 function App() {
   const [availableServices, setAvailableServices] = useState<Service[]>([
@@ -21,14 +21,14 @@ function App() {
     { name: 'bergfreunde.eu', fetchHandler: createFetchBergfreunde, active: true },
     { name: 'virsotne.lv', fetchHandler: createFetchVirsotne, active: true },
   ]);
-  const [size, setSize] = useState<string>(ANY_SIZE);
+  const [searchQuery, setSearchQuery] = useState<string>(ANYTHING);
 
   const LandingPage = (
     <Landing
       availableServices={availableServices}
       onAvailableServiceChange={handleAvailableServiceChange}
-      size={size}
-      onSizeChange={handleSizeChange}
+      searchQuery={searchQuery}
+      onSearchQueryChange={handleSearchQueryChange}
     />
   );
   const [device, setDevice] = useState<Device>(deviceContextDefaultValue);
@@ -49,8 +49,8 @@ function App() {
     setAvailableServices(updated);
   }
 
-  function handleSizeChange(size: string) {
-    setSize(size);
+  function handleSearchQueryChange(query: string) {
+    setSearchQuery(query);
   }
 
   return (

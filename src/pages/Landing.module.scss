@@ -14,13 +14,20 @@
   align-items: center;
 
   input {
-    font-size: 2em;
+    font-size: 1.5em;
     box-sizing: border-box;
-    padding: 1em 2em;
+    padding: 0.5em 1em;
     line-height: 1;
-    width: 8em;
+    width: 90vw;
     margin-bottom: 0.5em;
     text-align: center;
+    box-shadow: 0 0 0.6em #ccc;
+    border: 2px solid #eee;
+
+    &::placeholder {
+      color: #aaa;
+      font-size: 0.8em;
+    }
   }
 
   .mobileLandscape & {
@@ -28,17 +35,20 @@
   }
 }
 
-button {
-  font-size: 2em;
-  box-sizing: border-box;
-  padding: 1em 3em;
-  line-height: 1;
-  width: 8em;
+@media only screen and (min-width: 600px) {
+  .form {
+    input{
+      padding: 1em 2em;
+      font-size: 2em;
+      width: 18em;
+    }
+  }
 }
 
 .servicesSelector {
   display: flex;
   flex-direction: column;
+  margin-bottom: 2em;
 }
 
 @media only screen and (min-width: 600px) {
@@ -57,5 +67,23 @@ button {
   .mobileLandscape & {
     font-size: 1.3em;
     margin: 0.23em 0;
+  }
+}
+
+.referLink {
+  img {
+    width: 7em;
+  }
+
+  &:hover {
+    filter: opacity(0.8);
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .referLink {
+    img {
+      width: 9em;
+    }
   }
 }

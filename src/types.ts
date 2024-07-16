@@ -1,5 +1,6 @@
 export interface SearchParams {
   size?: string;
+  model?: string;
 }
 
 export interface Product {
