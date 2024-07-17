@@ -9,6 +9,7 @@ import {
   startCaseLowerCase,
   withProxy,
 } from '../utils';
+import { checkIfProductIsInStock } from './fetchEpicTvUtils';
 
 function split(manufacturerAndProductName: string) {
   const manufacturer = knownManufacturers().find((available) =>
@@ -144,10 +145,8 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
         console.log(`${name}: Unable to parse available sizes for ${products[idx].sellerUrl}`);
         continue;
       }
-      const spConfig = stockSizesJson['#product_addtocart_form']['configurable']['spConfig'];
-      const productAttribute = spConfig['attributes']['655']['options'].find((x: any) => x.id === sizeCode.paramValue);
-      const productAttributeCode = productAttribute['products'][0];
-      if (productAttributeCode && !spConfig['stockqtys'][productAttributeCode]) {
+      const isProductIsInStock = checkIfProductIsInStock(stockSizesJson, sizeCode);
+      if (!isProductIsInStock) {
         indicesWithoutSizeInStock.push(idx);
         console.error(
           `${name}. Size ${searchParams.size} out of stock of: ${products[idx].manufacturer} ${products[idx].productName}`
