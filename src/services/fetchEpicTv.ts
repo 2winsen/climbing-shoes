@@ -141,8 +141,9 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
       try {
         stockSizesJson = JSON.parse(stockSizesScriptTagContents.text);
       } catch (e) {
-        console.error(e);
-        console.log(`${name}: Unable to parse available sizes for ${products[idx].sellerUrl}`);
+        console.log(
+          `${name}: Unable to parse available sizes for ${products[idx].sellerUrl}. Product most likely is unavailable.`
+        );
         continue;
       }
       const isProductIsInStock = checkIfProductIsInStock(stockSizesJson, sizeCode);
