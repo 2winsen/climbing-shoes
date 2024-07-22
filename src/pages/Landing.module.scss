@@ -30,6 +30,13 @@
     }
   }
 
+  input::-webkit-search-cancel-button{
+    &:hover {
+      filter: opacity(0.8);
+      cursor: pointer;
+    }   
+}
+
   .inlineButton {
     border: 0;
     background-color: transparent;

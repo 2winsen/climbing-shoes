@@ -12,4 +12,8 @@
   &.selected {
     background-color: v.$accentColor;
   }
+
+  &:hover{
+    filter: opacity(0.8);
+  }
 }
