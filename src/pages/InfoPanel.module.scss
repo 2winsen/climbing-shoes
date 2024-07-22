@@ -1,0 +1,27 @@
+.infoPanel {
+  position: absolute;
+  background-color: #eee;
+  border-radius: 0.3em;
+  padding: 1em;
+  text-align: left;
+  width: 12em;
+
+  .smallLabel {
+    font-size: 0.6em;
+    font-family: monospace;
+  }
+
+  .label {
+    margin: 0;
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.4;
+  background-color: #000;
+}

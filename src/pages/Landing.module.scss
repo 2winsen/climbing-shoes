@@ -40,11 +40,24 @@
     left: 0;
     margin-left: 1em;
     margin-top: 0.1em;
+  }
+  
+  .infoButton {
+    width: 1em;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0;
+    position: absolute;
+    font-size: 2em;
+    right: -0.3em;
+    top: -0.3em;
+    outline: none;
+  }
 
-    &:hover {
-      filter: opacity(0.8);
-    }
-  }  
+  button:hover {
+    filter: opacity(0.8);
+  }
 }
 
 @media only screen and (min-width: 600px) {
@@ -57,6 +70,10 @@
 
     .inlineButton {
       font-size: 2.2em;
+    }
+
+    .infoButton {
+      font-size: 2em;
     }
   }
 }
