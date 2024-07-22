@@ -142,15 +142,15 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
         stockSizesJson = JSON.parse(stockSizesScriptTagContents.text);
       } catch (e) {
         console.log(
-          `${name}: Unable to parse available sizes for ${products[idx].sellerUrl}. Product most likely is unavailable.`
+          `${name}: Unable to parse available sizes for for ${products[idx].manufacturer} ${products[idx].productName} (${products[idx].sellerUrl}). Product most likely is unavailable.`
         );
         continue;
       }
-      const isProductIsInStock = checkIfProductIsInStock(stockSizesJson, sizeCode);
+      const isProductIsInStock = checkIfProductIsInStock(stockSizesJson, searchParams.size);
       if (!isProductIsInStock) {
         indicesWithoutSizeInStock.push(idx);
-        console.error(
-          `${name}. Size ${searchParams.size} out of stock of: ${products[idx].manufacturer} ${products[idx].productName}`
+        console.log(
+          `${name}. Size ${searchParams.size} out of stock for ${products[idx].manufacturer} ${products[idx].productName} (${products[idx].sellerUrl})`
         );
       }
     }

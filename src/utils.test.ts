@@ -53,6 +53,18 @@ describe('parseSearchQueryParam', () => {
     });
   });
 
+  test('size decimal', () => {
+    expect(parseSearchQueryParam('45.1')).toEqual({
+      size: '45.1',
+    });
+  });
+
+  test('size decimal comma', () => {
+    expect(parseSearchQueryParam('45,1')).toEqual({
+      size: '45.1',
+    });
+  });
+
   test('model', () => {
     expect(parseSearchQueryParam('la sportiva')).toEqual({
       model: 'la sportiva',

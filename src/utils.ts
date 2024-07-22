@@ -82,6 +82,8 @@ export function fetchWrapper(url: string) {
 }
 
 export function withProxy(url: string) {
+  // Local testing
+  // return 'https://corsproxy.io/?' + encodeURIComponent(url);
   return `${CORS_PROXY_URL}/${url}`;
 }
 
@@ -109,12 +111,13 @@ export function parseSearchQueryParam(searchQueryParam: string | null): SearchPa
   const searchQuery = searchQueryParam === ANYTHING || searchQueryParam == null ? undefined : searchQueryParam.trim();
   const searchParams: SearchParams = {};
   if (searchQuery) {
+    const searchQueryGeneric = searchQuery.replaceAll(',', '.');
     const numberPattern = '(\\d+(?:\\.\\d+)?)';
     const sizePattern = new RegExp(`^${numberPattern}\\s|\\s${numberPattern}$|^${numberPattern}$`, 'i');
 
-    const sizeMatch = searchQuery.match(sizePattern);
+    const sizeMatch = searchQueryGeneric.replaceAll(',', '.').match(sizePattern);
     const size = sizeMatch ? sizeMatch[0].trim() : undefined;
-    const model = size ? searchQuery.replace(size, '').trim() : searchQuery;
+    const model = size ? searchQueryGeneric.replace(size, '').trim() : searchQueryGeneric;
 
     return {
       size,

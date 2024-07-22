@@ -51,12 +51,17 @@ function Landing({ availableServices, onAvailableServiceChange, searchQuery, onS
         ))}
       </div>
       <form className={styles.form} onSubmit={handleFind}>
-        <input
-          type="search"
-          placeholder="🧗‍♂️ Search for your next shoes"
-          onChange={handleSearchQueryChange}
-          value={searchQuery === ANYTHING ? '' : searchQuery}
-        />
+        <div className={styles.formInner}>
+          <input
+            type="search"
+            placeholder="Search for your next shoes"
+            onChange={handleSearchQueryChange}
+            value={searchQuery === ANYTHING ? '' : searchQuery}
+          />
+          <button type="submit" className={styles.inlineButton}>
+            🔎
+          </button>
+        </div>
         <a
           className={styles.referLink}
           href="https://www.digitalocean.com/?refcode=94d4e01d1f0a&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"

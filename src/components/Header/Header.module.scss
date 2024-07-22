@@ -11,9 +11,38 @@
   justify-content: space-between;
 }
 
-.headerText {
-  font-size: 2.2em;
+.homeLink {
+  color: #000;
+  text-decoration: none;
+
+  &:visited {
+    color: #000;
+    text-decoration: none;
+  }
+
+  &:hover {
+    color: #000;
+    text-decoration: none;
+    filter: opacity(0.8);
+  }
+
+  &:active {
+    color: #000;
+    text-decoration: none;
+  }
+}
+
+.homeLinkText {
+  font-size: 2em;
+  text-transform: uppercase;
+  letter-spacing: -1px;
   font-weight: bold;
+}
+
+@media only screen and (min-width: 600px) {
+  .homeLinkText {
+    font-size: 2.2em;
+  }
 }
 
 .githubLink {

@@ -9,7 +9,7 @@ http://find-cheap-climbing-shoes.surge.sh/
 
 ### Stuff
 
-- `src/utils.ts` contains proxy url
+- `src/utils.ts` contains proxy function
 - version is visible in dev console
 
 ### Nice to have
