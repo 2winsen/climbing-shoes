@@ -36,10 +36,6 @@ pnpm dev:host # with exposure in local network
 - add gandrs data?
 - storybook (screenshot tests)
 
-## How to use mocks:
-
-- in conf.ts change USE_MOCKS to true
-
 ## How to add new service:
 
 - copy existing service i.e. fetchOliunid
@@ -47,6 +43,8 @@ pnpm dev:host # with exposure in local network
 - add mock service data and mock support to utils.ts
 
 ## How to deploy:
+
+N.B. `.env.production` should exist with correct endpoint
 
 - pnpm version patch
 - pnpm build

@@ -1,36 +1,7 @@
 import startCase from 'lodash/startCase';
 import { useEffect, useState } from 'react';
-import { CORS_PROXY_URL, MAX_WAIT, USE_MOCKS } from './conf';
-import responseBergfreunde from './mocks/mock-bergfreunde.html?raw';
-import responseEpicTv from './mocks/mock-epictv.html?raw';
-import responseOliunid from './mocks/mock-oliunid.html?raw';
-import responseVirsotne from './mocks/mock-virsotne.json';
+import { CORS_PROXY_URL, MAX_WAIT } from './conf';
 import { SearchParams } from './types';
-
-export function fetchMock(url: string): Promise<Response> {
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  let response: any;
-  let timeout = 500;
-  if (url.includes('virsotne')) {
-    response = responseVirsotne;
-    timeout = 500;
-  } else if (url.includes('oliunid')) {
-    response = responseOliunid;
-    timeout = 1000;
-  } else if (url.includes('epictv')) {
-    response = responseEpicTv;
-  } else if (url.includes('bergfreunde')) {
-    response = responseBergfreunde;
-  }
-  return new Promise((res) => {
-    setTimeout(() => {
-      res({
-        json: () => response,
-        text: () => response,
-      } as unknown as Response);
-    }, timeout);
-  });
-}
 
 export function startCaseLowerCase(value: string) {
   return startCase(value.toLowerCase());
@@ -70,9 +41,6 @@ export function useTimeout(condition: boolean, timeout: number) {
 }
 
 export function fetchWrapper(url: string) {
-  if (USE_MOCKS) {
-    return fetchMock(url);
-  }
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), (MAX_WAIT + 3) * 1000);
   return fetch(url, { signal: controller.signal }).then((r) => {

@@ -10,8 +10,6 @@ module.exports = {
   ...baseTransformer,
   process(src, filename, config, options) {
     const transformedSrc = 'const meta: any = {};\n' + src.replace(/import.meta.env/g, 'meta');
-
-    // Use the base ts-jest transformer to process the modified source code
     return baseTransformer.process(transformedSrc, filename, config, options);
   },
 };

@@ -4,7 +4,6 @@ import styles from './App.module.scss';
 import { DeviceContext, deviceContextDefaultValue } from './DeviceContext';
 import { Header } from './components/Header/Header';
 import { useOrientation } from './components/ProductList/useOrientation';
-import { USE_MOCKS } from './conf';
 import Landing from './pages/Landing';
 import Search from './pages/Search';
 import { createFetchBergfreunde } from './services/fetchBergfreunde';
@@ -56,7 +55,6 @@ function App() {
   return (
     <DeviceContext.Provider value={device}>
       <div className={styles.app}>
-        {USE_MOCKS ? <span className={styles.mocksHeader}>DEV mode with MOCKS</span> : null}
         <BrowserRouter>
           <Header />
           <Routes>

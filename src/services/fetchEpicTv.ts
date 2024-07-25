@@ -1,4 +1,3 @@
-import { USE_MOCKS } from '../conf';
 import { Product, SearchParams } from '../types';
 import {
   fetchWrapper,
@@ -121,7 +120,7 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
         console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);
       }
     }
-    if (!searchParams.size || USE_MOCKS) {
+    if (!searchParams.size) {
       return { products, totalPagesCount };
     }
     // Since EPIC TV has weird thing that filtered sizes in list mode are actually out of stock we have to check each shoe independently :(
