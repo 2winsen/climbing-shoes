@@ -1,83 +1,28 @@
-import { ColDef, ColGroupDef, ValueGetterParams } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from 'ag-grid-react';
 
+import { cloneDeep } from 'lodash';
 import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { DeviceContext } from '../../DeviceContext';
 import { VERBOSE_LOGGING } from '../../conf';
 import { Product } from '../../types';
-import { CheckBoxFilter } from './CheckBoxFilter';
-import { NumberFilter } from './NumberFilter';
-import { PriceCellRenderer } from './PriceCellRenderer';
-import { ProductImageCellRenderer } from './ProductImageCellRenderer';
 import styles from './ProductList.module.scss';
-import { SellerUrlCellRenderer } from './SellerUrlCellRenderer';
+import { produceListColumnDefs } from './productListColumnDefs';
 import { useOrientation } from './useOrientation';
 
 interface Props {
   products: Product[];
 }
 
-function sellerUrlValueGetter(params: ValueGetterParams<Product>) {
-  return params.data?.seller;
-}
-
-const wrapTextCellStyle = { whiteSpace: 'normal', lineHeight: 1.8, paddingTop: '0.4em' };
-
 export function ProductList({ products }: Props) {
+  const [searchParams] = useSearchParams();
+  const searchQueryParam = searchParams.get('q');
   const { isDesktop } = useContext(DeviceContext);
   const gridRef = useRef<AgGridReact<Product>>(null);
 
-  const columnDefs = useMemo<(ColDef | ColGroupDef)[]>(
-    () => [
-      {
-        field: 'imageUrl',
-        headerName: 'Image',
-        sortable: false,
-        filter: false,
-        cellRenderer: ProductImageCellRenderer,
-        minWidth: 130,
-      },
-      {
-        field: 'price',
-        minWidth: 100,
-        headerName: '€',
-        sort: 'asc',
-        cellRenderer: PriceCellRenderer,
-        filter: NumberFilter,
-        cellStyle: wrapTextCellStyle,
-      },
-      {
-        field: 'manufacturer',
-        minWidth: 120,
-        headerTooltip: 'Manufacturer',
-        filter: CheckBoxFilter,
-        cellStyle: wrapTextCellStyle,
-      },
-      {
-        field: 'productName',
-        headerName: 'Model',
-        tooltipField: 'productName',
-        autoHeight: true,
-        minWidth: 120,
-        filterParams: { filterOptions: ['contains'] },
-        cellStyle: wrapTextCellStyle,
-      },
-      {
-        field: 'sellerUrl',
-        headerName: 'URL',
-        cellRenderer: SellerUrlCellRenderer,
-        cellRendererParams: {
-          field: 'seller',
-        },
-        valueGetter: sellerUrlValueGetter,
-        minWidth: 130,
-        filter: CheckBoxFilter,
-      },
-    ],
-    []
-  );
+  const columnDefs = useMemo(() => produceListColumnDefs, []);
 
   const defaultColDef = useMemo(
     () => ({
@@ -89,15 +34,14 @@ export function ProductList({ products }: Props) {
     []
   );
 
-  const howToFilterOffset = isDesktop ? 0 : 1;
+  // Calculation are necessary to fix webpage scrollbar, scrollbar shout be only in ag-grid
+  const howToFilterOffsetEm = isDesktop ? 0 : '0.8em;';
+  const resultsOnQueryLabelOffsetEm = '1.1em';
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: `calc(100% - ${howToFilterOffset}em)` }),
-    [howToFilterOffset]
+    () => ({ width: '100%', height: `calc(100% - ${howToFilterOffsetEm}em - ${resultsOnQueryLabelOffsetEm})` }),
+    [howToFilterOffsetEm, resultsOnQueryLabelOffsetEm]
   );
-  const gridStyle = useMemo(
-    () => ({ width: '100%', height: `calc(100% - ${howToFilterOffset}em)` }),
-    [howToFilterOffset]
-  );
+  const gridStyle = cloneDeep(containerStyle);
 
   const onFirstDataRendered = useCallback(() => {
     gridRef.current?.api.sizeColumnsToFit();
@@ -118,7 +62,14 @@ export function ProductList({ products }: Props) {
 
   return (
     <div className={styles.productList}>
-      {!isDesktop ? <div className={styles.howToFilter}>**Tap and hold on header to filter.</div> : null}
+      <div style={{ fontSize: `${resultsOnQueryLabelOffsetEm}` }}>
+        Results on query: <b>{searchQueryParam}</b>
+      </div>
+      {!isDesktop ? (
+        <div className={styles.howToFilter} style={{ fontSize: `${howToFilterOffsetEm}` }}>
+          **Tap and hold on header to filter.
+        </div>
+      ) : null}
       <div style={containerStyle}>
         <div className="ag-theme-alpine" style={gridStyle}>
           <AgGridReact

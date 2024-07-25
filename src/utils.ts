@@ -82,8 +82,6 @@ export function fetchWrapper(url: string) {
 }
 
 export function withProxy(url: string) {
-  // Local testing
-  // return 'https://corsproxy.io/?' + encodeURIComponent(url);
   return `${CORS_PROXY_URL}/${url}`;
 }
 

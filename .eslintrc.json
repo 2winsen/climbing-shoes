@@ -1,7 +1,8 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "node": true
   },
   "extends": [
     "eslint:recommended",
@@ -27,6 +28,7 @@
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "error"
+    "react-hooks/exhaustive-deps": "error",
+    "@typescript-eslint/no-var-requires": "warn"
   }
 }

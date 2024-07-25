@@ -4,13 +4,28 @@ http://find-cheap-climbing-shoes.surge.sh/
 
 ### Run locally
 
-- pnpm dev
-- pnpm dev:host - with exposure in local network
+#### Proxy Server
+
+```
+cd server
+pnpm install
+pnpm start
+```
+
+#### UI
+
+```
+cd ..
+pnpm install
+pnpm dev
+pnpm dev:host # with exposure in local network
+```
 
 ### Stuff
 
 - `src/utils.ts` contains proxy function
 - version is visible in dev console
+- `server/index.js` proxy server
 
 ### Nice to have
 
