@@ -35,10 +35,10 @@ function ProductList({ products }: Props) {
   );
 
   // Calculation are necessary to fix webpage scrollbar, scrollbar shout be only in ag-grid
-  const howToFilterOffsetEm = isDesktop ? 0 : '0.8em;';
+  const howToFilterOffsetEm = isDesktop ? 0 : '0.8em';
   const resultsOnQueryLabelOffsetEm = '1.1em';
   const containerStyle = useMemo(
-    () => ({ width: '100%', height: `calc(100% - ${howToFilterOffsetEm}em - ${resultsOnQueryLabelOffsetEm})` }),
+    () => ({ width: '100%', height: `calc(100% - ${howToFilterOffsetEm} - ${resultsOnQueryLabelOffsetEm})` }),
     [howToFilterOffsetEm, resultsOnQueryLabelOffsetEm]
   );
   const gridStyle = cloneDeep(containerStyle);
