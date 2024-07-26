@@ -1,12 +1,14 @@
 import flatten from 'lodash/flatten';
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Loading } from '../components/Loading/Loading';
-import { ProductList } from '../components/ProductList/ProductList';
+import { SuspenseFallbackLoading } from '../components/SuspenseFallbackLoading/SuspenseFallbackLoading';
 import { useFetch } from '../services/useFetch';
 import { Product, SearchParams, Service } from '../types';
 import { parseSearchQueryParam, useTimeout } from '../utils';
 import styles from './Search.module.scss';
+// import { ProductList } from '../components/ProductList/ProductList';
+const ProductList = lazy(() => import('../components/ProductList/ProductList'));
 
 interface Props {
   availableServices: Service[];
@@ -33,9 +35,11 @@ function Search({ availableServices }: Props) {
   }
   const products = flatten(serviceResults.filter(([data]) => data).map(([data]) => data as Product[]));
   return (
-    <div className={styles.searchWrapper}>
-      <ProductList products={products} />
-    </div>
+    <Suspense fallback={<SuspenseFallbackLoading title="Rendering results..." />}>
+      <div className={styles.searchWrapper}>
+        <ProductList products={products} />
+      </div>
+    </Suspense>
   );
 }
 

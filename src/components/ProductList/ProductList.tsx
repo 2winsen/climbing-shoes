@@ -16,7 +16,7 @@ interface Props {
   products: Product[];
 }
 
-export function ProductList({ products }: Props) {
+function ProductList({ products }: Props) {
   const [searchParams] = useSearchParams();
   const searchQueryParam = searchParams.get('q');
   const { isDesktop } = useContext(DeviceContext);
@@ -86,3 +86,5 @@ export function ProductList({ products }: Props) {
     </div>
   );
 }
+
+export default ProductList;

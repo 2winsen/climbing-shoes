@@ -1,0 +1,25 @@
+.suspenseFallbackLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+
+  .item {
+    font-size: 1.6em;
+    margin-bottom: 0.7em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 2em;
+  }
+  
+  .title {
+    margin-right: 0.5em;
+  }
+  
+  .indicator {
+    display: inline-block;
+    width: 1em;
+  }
+}

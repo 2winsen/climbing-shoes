@@ -4,6 +4,7 @@
   "version": "2.0.12",
   "scripts": {
     "dev": "vite",
+    "server": "node server/index.js",
     "dev:host": "vite --host",
     "build": "jest && tsc && vite build && cp dist/index.html dist/200.html",
     "surge:deploy": "surge dist/ --domain find-cheap-climbing-shoes.surge.sh",
@@ -45,7 +46,8 @@
     "sass": "^1.59.3",
     "ts-jest": "^29.1.0",
     "typescript": "^4.9.3",
-    "vite": "^4.1.0"
+    "vite": "^4.1.0",
+    "vite-plugin-preload": "^0.4.0"
   },
   "postcss": {
     "plugins": {

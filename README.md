@@ -10,6 +10,8 @@ http://find-cheap-climbing-shoes.surge.sh/
 cd server
 pnpm install
 pnpm start
+or
+pnpm run server (from base directory)
 ```
 
 #### UI
