@@ -51,3 +51,7 @@ N.B. `.env.production` should exist with correct endpoint
 - pnpm version patch
 - pnpm build
 - pnpm surge:deploy
+
+## In case of prod error deploy "Under Construction" placeholder page
+
+- pnpm surge:deployUnderConstruction

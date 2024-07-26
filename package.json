@@ -8,6 +8,7 @@
     "dev:host": "vite --host",
     "build": "jest && tsc && vite build && cp dist/index.html dist/200.html",
     "surge:deploy": "surge dist/ --domain find-cheap-climbing-shoes.surge.sh",
+    "surge:deployUnderConstruction": "surge under-construction/ --domain find-cheap-climbing-shoes.surge.sh",
     "preview": "vite preview",
     "lint": "eslint ./src",
     "test": "jest"
