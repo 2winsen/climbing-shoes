@@ -1,9 +1,10 @@
-import { LoadingItem } from './LoadingItem';
-import styles from './Loading.module.scss';
-import { QueryResult } from '../../types';
-import { ProgressBar } from './ProgressBar';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { MAX_WAIT } from '../../conf';
+import { QueryResult } from '../../types';
+import styles from './Loading.module.scss';
+import { LoadingItem } from './LoadingItem';
+import { ProgressBar } from './ProgressBar';
 
 interface Props {
   items: QueryResult[];
@@ -11,6 +12,8 @@ interface Props {
 
 export function Loading({ items }: Props) {
   const [progress, setProgress] = useState(0);
+  const [searchParams] = useSearchParams();
+  const searchQueryParam = searchParams.get('q');
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -27,6 +30,9 @@ export function Loading({ items }: Props) {
 
   return (
     <div className={styles.loading}>
+      <div className={styles.searchingForLabel}>
+        Searching for: <b>{searchQueryParam}</b>
+      </div>
       {items.map(([data, error, title]) => (
         <LoadingItem key={title} title={title} data={data} error={error} />
       ))}

@@ -4,6 +4,8 @@ http://find-cheap-climbing-shoes.surge.sh/
 
 ### Run locally
 
+create `.env.production` with production value of environment variables
+
 #### Proxy Server
 
 ```

@@ -33,7 +33,7 @@
 }
 
 .homeLinkText {
-  font-size: 2em;
+  font-size: 1.35em;
   text-transform: uppercase;
   letter-spacing: -1px;
   font-weight: bold;
@@ -45,13 +45,49 @@
   }
 }
 
-.githubLink {
-  width: 1.5em;
-  height: 1.5em;
-  transform: translate(-100%, 0);
-  border-radius: 100%;
+// Very small device (smaller than iPhone SE)
+@media only screen and (max-width: 370px) {
+  .homeLinkText {
+    font-size: 1.15em;
+  }
+}
 
-  &:hover {
-    box-shadow: 0 0 1em #888;
+.rightContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  margin-right: 1.5em;
+
+  .githubLink {
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 100%;
+  
+    &:hover {
+      box-shadow: 0 0 1em #888;
+    }
+  }
+
+  .kofiButtonContainer {
+    font-size: 0.95em;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .rightContainer {
+    gap: 1.5em;
+
+    .kofiButtonContainer {
+      font-size: 1.3em;
+    }
+  }
+}
+
+// Very small device (smaller than iPhone SE)
+@media only screen and (max-width: 370px) {
+  .rightContainer .kofiButtonContainer {
+      font-size: 0.8em;
   }
 }

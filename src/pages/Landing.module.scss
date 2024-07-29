@@ -132,6 +132,7 @@
 
 .referLink {
   margin-top: 1.2em;
+  filter: grayscale(1);
 
   img {
     width: 7em;
@@ -145,7 +146,7 @@
 @media only screen and (min-width: 600px) {
   .referLink {
     img {
-      width: 9em;
+      width: 8em;
     }
   }
 }
