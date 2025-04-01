@@ -27,6 +27,9 @@ export function useFetch(
   useEffect(() => {
     async function fetchAllPages() {
       const { products = [], totalPagesCount = 1 } = await fetchSinglePage(1);
+      if (VERBOSE_LOGGING) {
+        console.log(`${name}: Total PAGES count: ${totalPagesCount}`);
+      }
       if (totalPagesCount > 1) {
         const productsFromAllPages: Product[][] = [];
         productsFromAllPages.push(products);
@@ -48,7 +51,7 @@ export function useFetch(
     fetchAllPages()
       .then((products) => {
         if (VERBOSE_LOGGING) {
-          console.log(`${name}: ${products.length}`);
+          console.log(`${name}: Total PRODUCTS count: ${products.length}`);
         }
         setData(products.filter(filterByModel(searchParams.model)));
       })

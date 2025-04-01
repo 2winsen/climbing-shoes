@@ -22,6 +22,10 @@ describe('priceWithCurrencyToNumber', () => {
   test('format with word from', () => {
     expect(priceWithCurrencyToNumber('from € 109,95')).toBe(109.95);
   });
+
+  test('format with blank spaces', () => {
+    expect(priceWithCurrencyToNumber('  \n    € 134,96    \n       ')).toBe(134.96);
+  });
 });
 
 describe('startCaseLowerCase', () => {

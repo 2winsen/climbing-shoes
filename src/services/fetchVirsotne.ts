@@ -131,7 +131,10 @@ export function createFetchVirsotne(name: string, searchParams: SearchParams) {
             seller: removeWww(new URL(sellerUrl).hostname),
           });
         } else {
-          console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);
+          console.error(
+            `WARNING ${name}. Insufficient product data. Can't add. Most probably product is not available.`,
+            `productName: ${productName}, price: ${price} imageUrl: ${imageUrl}, sellerUrl: ${sellerUrl}`
+          );
         }
       }
     }

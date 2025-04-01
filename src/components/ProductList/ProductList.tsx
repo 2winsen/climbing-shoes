@@ -49,7 +49,7 @@ function ProductList({ products }: Props) {
   }, [products]);
 
   if (VERBOSE_LOGGING) {
-    console.log(`total products: ${products.length}`);
+    console.log(`Products rendered in GRID: ${products.length}`);
   }
 
   const orientation = useOrientation();

@@ -44,8 +44,6 @@ export function createFetchOliunid(name: string, searchParams: SearchParams) {
     const body2Idx = responseText.indexOf(body2Term);
     const body = responseText.substring(body1Idx, body2Idx + body2Term.length);
     const el = htmlToElement(body);
-    const pagesSummaryEl = el.querySelector('.pages .items .summary')?.textContent?.split(' ').reverse()[0];
-    const totalPagesCount = +(pagesSummaryEl ?? 1);
     const productsToBeParsed = el.querySelectorAll('.products.list .product-item');
     for (const product of productsToBeParsed) {
       const manufacturerAndProductName = product.querySelector('.product-item-name')?.textContent;
@@ -53,7 +51,7 @@ export function createFetchOliunid(name: string, searchParams: SearchParams) {
       const priceStr = product.querySelector('.normal-price .price')?.textContent;
       const price = priceWithCurrencyToNumber(priceStr);
       const oldPrice = product.querySelector('.old-price .price')?.textContent;
-      const imageUrl = (product.querySelector('.product-item-info source') as HTMLElement)?.dataset.srcset;
+      const imageUrl = product.querySelector('.product-item-info img')?.getAttribute('data-src');
       if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
         const [manufacturer, productName] = split(manufacturerAndProductName.replace('climbing shoes', '').trim());
         products.push({
@@ -66,9 +64,13 @@ export function createFetchOliunid(name: string, searchParams: SearchParams) {
           seller: removeWww(new URL(sellerUrl).hostname),
         });
       } else {
-        console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);
+        console.error(
+          `WARNING ${name}. Insufficient product data. Can't add. Most probably product is not available.`,
+          `${manufacturerAndProductName}, price: ${price} imageUrl: ${imageUrl}, sellerUrl: ${sellerUrl}`
+        );
       }
     }
-    return { products, totalPagesCount };
+    // Oliunid implemented lazy load of pages navigation so we need to manually check pages (assuming there are no more than 10 pages)
+    return { products, totalPagesCount: 10 };
   };
 }

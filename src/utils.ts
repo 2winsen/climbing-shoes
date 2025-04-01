@@ -69,6 +69,7 @@ export function priceWithCurrencyToNumber(price: string | undefined | null) {
   const withoutCurrency = String(price)
     .replaceAll(/[a-zA-Z ]/g, '')
     .replaceAll(',', '.')
+    .trim()
     .slice(1);
   return parseFloat(withoutCurrency);
 }

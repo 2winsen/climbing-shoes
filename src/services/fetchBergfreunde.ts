@@ -34,12 +34,15 @@ export function createFetchBergfreunde(name: string, searchParams: SearchParams)
     const body2Idx = responseText.indexOf(body2Term);
     const body = responseText.substring(body1Idx, body2Idx + body2Term.length);
     const el = htmlToElement(body);
-    const pagesItems = el.querySelectorAll('.paging a.locator-item');
+    const pagesItems = el.querySelectorAll('[data-codecept="pagination"] a');
     const lastPageItem = pagesItems[pagesItems.length - 1]?.textContent
       ?.replace(/\s+/g, ' ')
       ?.trim()
       ?.split(' ')
       .reverse()[0];
+    if (!lastPageItem) {
+      console.error(`WARNING. Only first page is loaded: ${name} (might be missing products)`);
+    }
     const totalPagesCount = +(lastPageItem ?? 1);
     const productsToBeParsed = el.querySelectorAll('#product-list .product-item');
     for (const product of productsToBeParsed) {
@@ -61,7 +64,10 @@ export function createFetchBergfreunde(name: string, searchParams: SearchParams)
           seller: removeWww(new URL(sellerUrl).hostname),
         });
       } else {
-        console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);
+        console.error(
+          `WARNING ${name}. Insufficient product data. Can't add. Most probably product is not available.`,
+          `${manufacturer}, productName: ${productName}, price: ${price} imageUrl: ${imageUrl}, sellerUrl: ${sellerUrl}`
+        );
       }
     }
     return { products, totalPagesCount };

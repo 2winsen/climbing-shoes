@@ -96,6 +96,9 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
       ?.trim()
       ?.split(' ')
       .reverse()[0];
+    if (!lastPageItem) {
+      console.error(`WARNING. Only first page is loaded: ${name} (might be missing products)`);
+    }
     const totalPagesCount = +(lastPageItem ?? 1);
     const productsToBeParsed = el.querySelectorAll('.products.list .product-item');
     for (const product of productsToBeParsed) {
@@ -104,7 +107,7 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
       const priceStr = product.querySelector('.normal-price .price')?.textContent;
       const price = priceWithCurrencyToNumber(priceStr);
       const oldPrice = product.querySelector('.old-price .price-wrapper')?.textContent;
-      const imageUrl = (product.querySelector('.product-image-photo') as HTMLElement)?.getAttribute('src');
+      const imageUrl = (product.querySelector('.product-image-photo source') as HTMLElement)?.getAttribute('srcset');
       if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
         const [manufacturer, productName] = split(manufacturerAndProductName.replace('Climbing Shoe', '').trim());
         products.push({
@@ -117,14 +120,16 @@ export function createFetchEpicTv(name: string, searchParams: SearchParams) {
           seller: removeWww(new URL(sellerUrl).hostname),
         });
       } else {
-        console.error(`Insufficient product data. Can't add. Most probably product is not available: ${name}`);
+        console.error(
+          `WARNING ${name}. Insufficient product data. Can't add. Most probably product is not available.`,
+          `${manufacturerAndProductName}, price: ${price} imageUrl: ${imageUrl}, sellerUrl: ${sellerUrl}`
+        );
       }
     }
     if (!searchParams.size) {
       return { products, totalPagesCount };
     }
     // Since EPIC TV has weird thing that filtered sizes in list mode are actually out of stock we have to check each shoe independently :(
-    const sizeCode = sizeMap[searchParams.size];
     const everyPageUrl = products.map((p) => p.sellerUrl).map((url) => withProxy(url.toString()));
     const everyPagePromise = everyPageUrl.map(fetchWrapper);
     const productsPagesResponses = await Promise.all(everyPagePromise);
