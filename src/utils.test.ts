@@ -2,12 +2,16 @@ import { CORS_PROXY_URL } from './conf';
 import { parseSearchQueryParam, priceWithCurrencyToNumber, startCaseLowerCase, withProxy } from './utils';
 
 describe('priceWithCurrencyToNumber', () => {
-  test('format', () => {
-    expect(priceWithCurrencyToNumber('€134.96')).toBe(134.96);
-  });
-
-  test('format with comma', () => {
-    expect(priceWithCurrencyToNumber('€ 134,96')).toBe(134.96);
+  test.each([
+    ['€134', 134],
+    ['€134.96', 134.96],
+    ['€ 134.96', 134.96],
+    ['134.96€', 134.96],
+    ['134.96 €', 134.96],
+    ['€134,96', 134.96],
+    ['134,96€', 134.96],
+  ])('format %s', (input, expected) => {
+    expect(priceWithCurrencyToNumber(input)).toBe(expected);
   });
 
   test('format null', () => {

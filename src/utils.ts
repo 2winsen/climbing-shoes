@@ -66,12 +66,15 @@ export function priceWithCurrencyToNumber(price: string | undefined | null) {
   if (price == null) {
     return undefined;
   }
-  const withoutCurrency = String(price)
+  const sanitizedPrice = String(price)
     .replaceAll(/[a-zA-Z ]/g, '')
     .replaceAll(',', '.')
-    .trim()
-    .slice(1);
-  return parseFloat(withoutCurrency);
+    .trim();
+  const [, n] = sanitizedPrice.match(/([\d|.]+)/) ?? [];
+  if (!n) {
+    return NaN;
+  }
+  return parseFloat(n);
 }
 
 export function parseSearchQueryParam(searchQueryParam: string | null): SearchParams {

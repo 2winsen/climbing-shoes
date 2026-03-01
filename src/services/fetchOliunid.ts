@@ -50,9 +50,10 @@ export function createFetchOliunid(name: string, searchParams: SearchParams) {
       const sellerUrl = product.querySelector('.product-item-name .product-item-link')?.getAttribute('href');
       const priceStr = product.querySelector('.normal-price .price')?.textContent;
       const price = priceWithCurrencyToNumber(priceStr);
-      const oldPrice = product.querySelector('.old-price .price')?.textContent;
+      const oldPriceStr = product.querySelector('.old-price .price')?.textContent;
+      const oldPrice = priceWithCurrencyToNumber(oldPriceStr);
       const imageSelector = product.querySelector('.product-item-info img');
-      const imageUrl = ['data-amsrc', 'data-src'].map((attr) => imageSelector?.getAttribute(attr)).find(Boolean);
+      const imageUrl = ['data-amsrc', 'data-src', 'src'].map((attr) => imageSelector?.getAttribute(attr)).find(Boolean);
       if (manufacturerAndProductName && price && imageUrl && sellerUrl) {
         const [manufacturer, productName] = split(manufacturerAndProductName.replace('climbing shoes', '').trim());
         products.push({
@@ -60,7 +61,7 @@ export function createFetchOliunid(name: string, searchParams: SearchParams) {
           manufacturer: startCaseLowerCase(manufacturer),
           productName: startCaseLowerCase(productName),
           price,
-          oldPrice: priceWithCurrencyToNumber(oldPrice),
+          oldPrice,
           sellerUrl,
           seller: removeWww(new URL(sellerUrl).hostname),
         });

@@ -43,8 +43,8 @@ pnpm dev:host # with exposure in local network
 ## How to add new service:
 
 - copy existing service i.e. fetchOliunid
-- add service to Search.tsx
-- add mock service data and mock support to utils.ts
+- add service to App.tsx
+- add mock service data and mock support to utils.ts (deprecated)
 
 ## How to deploy:
 

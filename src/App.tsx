@@ -7,6 +7,7 @@ import { useOrientation } from './components/ProductList/useOrientation';
 import Landing from './pages/Landing';
 import Search from './pages/Search';
 import { createFetchBergfreunde } from './services/fetchBergfreunde';
+import { createFetchBike24 } from './services/fetchBike24';
 import { createFetchEpicTv } from './services/fetchEpicTv';
 import { createFetchOliunid } from './services/fetchOliunid';
 import { createFetchVirsotne } from './services/fetchVirsotne';
@@ -18,6 +19,7 @@ function App() {
     { name: 'epictv.com', fetchHandler: createFetchEpicTv, active: true },
     { name: 'oliunid.com', fetchHandler: createFetchOliunid, active: true },
     { name: 'bergfreunde.eu', fetchHandler: createFetchBergfreunde, active: true },
+    { name: 'bike24.com', fetchHandler: createFetchBike24, active: true },
     { name: 'virsotne.lv', fetchHandler: createFetchVirsotne, active: true },
   ]);
   const [searchQuery, setSearchQuery] = useState<string>(ANYTHING);
